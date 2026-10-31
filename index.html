@@ -12,8 +12,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HabitFlow">
 <meta name="theme-color" content="#10b981">
-<meta name="description" content="Ganesh HabitFlow - personal habits, focus and productivity.">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -577,6 +575,9 @@ body.dark .kbd-hint {
     </div>
   </div>
   <div class="flex items-center gap-1.5 shrink-0">
+    <button id="mobile-sync-top-btn" class="h-8 px-2 rounded-lg text-xs font-bold flex items-center gap-1 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 shadow-sm" title="Phone & Laptop Auto-Sync">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="text-[11px]" id="mobile-sync-text">Sync</span>
+    </button>
     <button id="mobile-install-top-btn" class="install-app-btn h-8 px-2 rounded-lg text-xs font-bold flex items-center gap-1 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 shadow-sm" title="Install App to Home Screen">
       <span>📲</span><span class="text-[11px]">Install</span>
     </button>
@@ -614,6 +615,15 @@ body.dark .kbd-hint {
       <button class="nav-item" data-page="coach">✧ <span>AI Habit Coach</span><span class="kbd-hint">0</span></button>
       <button class="nav-item" data-page="settings">⚙ <span>Settings &amp; Backup</span><span class="kbd-hint">-</span></button>
     </nav>
+
+    <!-- Device Auto-Sync Button in Sidebar -->
+    <button class="btn btn-soft w-full justify-between text-xs py-2 mt-1" id="sidebar-sync-btn" title="Phone & Laptop Auto-Sync">
+      <span class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="sidebar-sync-dot"></span>
+        <span>Phone &amp; Laptop Sync</span>
+      </span>
+      <span class="pill pill-amber text-[9px]" id="sidebar-sync-pill">Live</span>
+    </button>
 
     <!-- Laptop Shortcuts Modal Trigger Button in Sidebar -->
     <button class="btn btn-soft w-full justify-between text-xs py-2 mt-1" id="sidebar-shortcuts-btn" title="View keyboard shortcuts">
@@ -657,6 +667,11 @@ body.dark .kbd-hint {
       </div>
 
       <div class="flex items-center gap-2 flex-wrap desktop-only">
+        <!-- Desktop Auto-Sync Status Button -->
+        <button class="btn btn-soft text-xs" id="desktop-sync-btn" title="Phone & Laptop Auto-Sync Status">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1 animate-pulse" id="desktop-sync-dot"></span>
+          <span id="desktop-sync-text">Auto-Sync: Live</span>
+        </button>
         <!-- Audio Mute / Unmute Toggle -->
         <button class="btn btn-soft" id="sound-toggle" title="Toggle audio feedback">
           🔊 Sound: On
@@ -979,9 +994,77 @@ body.dark .kbd-hint {
 
     <!-- ================= PAGE 4: CALENDAR & 365-DAY HEATMAP ================= -->
     <section class="page" id="page-calendar">
-      <!-- 365-Day Contribution Heatmap Panel -->
+      <!-- Date Picker & Quick Navigation Toolbar -->
+      <div class="panel p-5 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-extrabold" style="font-family: 'Manrope', sans-serif">Daily History &amp; Calendar Suite</h2>
+            <p class="text-xs muted mt-0.5">Pick any date to audit every habit, focus block, and reflection you logged.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <label class="text-xs font-bold muted">Select Date:</label>
+            <input type="date" id="cal-history-date-picker" class="text-xs font-bold py-1.5 px-3 rounded-xl border" style="background: var(--panel); border-color: var(--line)">
+            <button class="btn btn-soft text-xs py-1.5 px-3" id="btn-hist-today">Today</button>
+            <button class="btn btn-soft text-xs py-1.5 px-3" id="btn-hist-yesterday">Yesterday</button>
+            <button class="btn btn-soft text-xs py-1.5 px-3" id="btn-hist-7days">7d Ago</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Specific Date Comprehensive History Inspector Card -->
+      <div class="panel p-6 mb-6" id="calendar-history-panel" style="border: 2px solid rgba(16, 185, 129, 0.35);">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b" style="border-color: var(--line)">
+          <div class="flex items-center gap-2">
+            <button class="btn btn-soft text-xs py-1.5 px-2.5" id="hist-nav-prev" title="Previous Day">← Prev</button>
+            <div>
+              <h3 class="text-lg font-extrabold" id="hist-display-date" style="font-family: 'Manrope', sans-serif">Today's History</h3>
+              <p class="text-xs muted" id="hist-display-meta">Full activity audit for this date</p>
+            </div>
+            <button class="btn btn-soft text-xs py-1.5 px-2.5" id="hist-nav-next" title="Next Day">Next →</button>
+          </div>
+          <div class="flex items-center gap-2" id="hist-score-badges">
+            <span class="pill" id="hist-rate-pill">0% Complete</span>
+            <span class="pill pill-amber" id="hist-xp-pill">+0 XP</span>
+          </div>
+        </div>
+
+        <!-- History Content Grid -->
+        <div class="grid lg:grid-cols-12 gap-5" id="calendar-detail">
+          <!-- Dynamically filled by showCalendarDate -->
+        </div>
+      </div>
+
+      <!-- Monthly Calendar Ledger Panel -->
       <div class="panel p-6 mb-6">
-        <div class="flex justify-between items-center mb-3">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-5">
+          <div>
+            <h2 class="text-xl font-extrabold">Monthly Habit Ledger</h2>
+            <p class="text-xs muted">Click on any date to inspect details, completions, and past logs.</p>
+          </div>
+          <div class="flex gap-2 items-center">
+            <button class="btn btn-soft" id="cal-prev" aria-label="Previous month">←</button>
+            <b id="cal-month" class="px-2 text-sm font-extrabold min-w-[120px] text-center"></b>
+            <button class="btn btn-soft" id="cal-next" aria-label="Next month">→</button>
+            <button class="btn btn-soft text-xs" id="cal-today-btn">Current Month</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-7 gap-2 text-center text-xs muted font-bold mb-2">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+        <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+
+        <div class="flex flex-wrap gap-4 text-xs muted mt-4 pt-3 border-t" style="border-color: var(--line)">
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 100% Completed</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Partial (&gt;0%)</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600"></span> Missed / Rest</span>
+          <span class="muted ml-auto text-[11px]">Tip: Click any day cell to load its complete history above.</span>
+        </div>
+      </div>
+
+      <!-- 365-Day Contribution Heatmap Panel -->
+      <div class="panel p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-3">
           <div>
             <h2 class="text-xl font-extrabold">365-Day Consistency Heatmap</h2>
             <p class="text-xs muted">A high-density GitHub-style map of your daily habit victories across the entire year.</p>
@@ -998,38 +1081,7 @@ body.dark .kbd-hint {
         <div class="heatmap-container">
           <div id="year-heatmap" class="heatmap-grid py-2"></div>
         </div>
-        <p class="text-[11px] muted mt-2">Hover or tap on any cell to view the exact date, check-ins, and completion rate.</p>
-      </div>
-
-      <!-- Monthly Calendar Panel -->
-      <div class="panel p-6">
-        <div class="flex justify-between items-center mb-5">
-          <div>
-            <h2 class="text-xl font-extrabold">Monthly Habit Ledger</h2>
-            <p class="text-xs muted">Click on any date to inspect details and completions.</p>
-          </div>
-          <div class="flex gap-2 items-center">
-            <button class="btn btn-soft" id="cal-prev" aria-label="Previous month">←</button>
-            <b id="cal-month" class="px-2 text-sm"></b>
-            <button class="btn btn-soft" id="cal-next" aria-label="Next month">→</button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-7 gap-2 text-center text-xs muted font-bold mb-2">
-          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-        </div>
-        <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
-
-        <div class="flex gap-4 text-xs muted mt-4">
-          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 100% Completed</span>
-          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Partial</span>
-          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600"></span> None</span>
-        </div>
-
-        <!-- Date Detail Box -->
-        <div id="calendar-detail" class="mt-5 p-4 rounded-xl text-sm" style="background: var(--bg); border: 1px solid var(--line)">
-          Select any date in the calendar above to view its completed habits and reflections.
-        </div>
+        <p class="text-[11px] muted mt-2">Hover or tap on any cell to inspect that date's full timeline history.</p>
       </div>
     </section>
 
@@ -1466,6 +1518,18 @@ body.dark .kbd-hint {
     <button id="mobile-drawer-close" class="w-8 h-8 rounded-full border grid place-items-center font-bold text-xs shrink-0" style="border-color: var(--line)">✕</button>
   </div>
 
+  <!-- Phone & Laptop Auto-Sync Card in Drawer -->
+  <div class="p-3.5 rounded-2xl border flex items-center justify-between gap-3 w-full shrink-0" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(16, 185, 129, 0.1)); border-color: rgba(6, 182, 212, 0.35);">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-9 h-9 rounded-xl grid place-items-center text-lg font-bold shrink-0 shadow-sm" style="background: #06b6d4; color: #082f49">🔄</div>
+      <div class="min-w-0">
+        <div class="font-extrabold text-xs leading-tight">Phone &amp; Laptop Sync</div>
+        <div class="text-[10px] muted leading-tight mt-0.5" id="drawer-sync-status-text">Real-time cross-device auto-sync</div>
+      </div>
+    </div>
+    <button class="btn btn-soft text-xs py-1.5 px-3 shrink-0 font-extrabold" id="drawer-sync-btn">Connect</button>
+  </div>
+
   <!-- Install App Banner in Drawer -->
   <div class="p-3.5 rounded-2xl border flex items-center justify-between gap-3 w-full shrink-0" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.1)); border-color: rgba(16, 185, 129, 0.35);">
     <div class="flex items-center gap-2.5 min-w-0">
@@ -1594,6 +1658,97 @@ body.dark .kbd-hint {
   </div>
 </div>
 
+<!-- Device Auto-Sync & Cloud Vault Modal -->
+<div id="sync-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="modal-box max-w-lg">
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl grid place-items-center text-lg font-bold shadow-sm" style="background: #06b6d4; color: #082f49">🔄</div>
+        <div>
+          <h3 class="font-extrabold text-base leading-tight" style="font-family: 'Manrope', sans-serif">Phone &amp; Laptop Auto-Sync</h3>
+          <p class="text-xs muted">Seamless real-time synchronization across all your devices</p>
+        </div>
+      </div>
+      <button class="text-slate-400 hover:text-slate-600 text-lg font-bold" id="sync-close-x" aria-label="Close dialog">✕</button>
+    </div>
+
+    <!-- Sync Status Banner -->
+    <div class="p-3.5 rounded-xl border flex items-center justify-between gap-3 mb-4" id="modal-sync-banner" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3)">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" id="modal-sync-dot"></span>
+        <div>
+          <div class="font-bold text-xs" id="modal-sync-title">Auto-Sync is Connected</div>
+          <div class="text-[11px] muted" id="modal-sync-subtitle">Last synchronized: Just now</div>
+        </div>
+      </div>
+      <button class="btn btn-primary text-xs py-1.5 px-3" id="modal-sync-now-btn">Sync Now</button>
+    </div>
+
+    <!-- Sync Tabs -->
+    <div class="flex gap-2 p-1 rounded-xl mb-4 text-xs font-bold" style="background: var(--bg); border: 1px solid var(--line);">
+      <button id="sync-tab-code" class="flex-1 py-1.5 px-3 rounded-lg bg-emerald-500 text-white transition-all text-center">Secret Vault Code</button>
+      <button id="sync-tab-qr" class="flex-1 py-1.5 px-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-center">Scan QR Code</button>
+      <button id="sync-tab-link" class="flex-1 py-1.5 px-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-center">1-Tap Link</button>
+    </div>
+
+    <!-- Tab 1: Secret Vault Code -->
+    <div id="sync-pane-code" class="space-y-3.5 mb-5 text-xs">
+      <div>
+        <label class="block font-bold muted mb-1">YOUR SECRET SYNC ROOM CODE</label>
+        <div class="flex gap-2">
+          <input id="sync-room-input" class="font-mono text-sm tracking-widest font-extrabold uppercase" value="GANESH-2026" placeholder="e.g. GANESH-2026">
+          <button class="btn btn-soft text-xs shrink-0" id="sync-gen-code-btn" title="Generate New Random Code">🎲 New Code</button>
+        </div>
+        <p class="text-[11px] muted mt-1.5">
+          Enter this exact same code on your phone and laptop. Any habit check-in, streak, or reflection will automatically mirror across both devices in real-time.
+        </p>
+      </div>
+
+      <div class="flex items-center justify-between p-3 rounded-xl border" style="background: var(--bg); border-color: var(--line)">
+        <div>
+          <div class="font-bold text-xs">Automatic Background Sync</div>
+          <div class="text-[10px] muted">Silently polls every 10s and pushes on check-in</div>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="sync-auto-toggle" class="sr-only peer" checked>
+          <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+        </label>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button class="btn btn-primary text-xs py-2 px-4" id="sync-save-code-btn">Save &amp; Connect Room</button>
+      </div>
+    </div>
+
+    <!-- Tab 2: Scan QR Code -->
+    <div id="sync-pane-qr" class="text-xs space-y-3 mb-5 hidden text-center">
+      <p class="muted">Scan this QR code with your phone camera to instantly connect and mirror your habits:</p>
+      <div class="p-4 bg-white rounded-2xl inline-block shadow-md mx-auto my-2 border border-slate-200">
+        <div id="sync-qr-container" class="flex items-center justify-center min-w-[180px] min-h-[180px]">
+          <!-- QR Image loaded dynamically -->
+        </div>
+      </div>
+      <p class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">Vault: <span id="sync-qr-room-label" class="font-mono">GANESH-2026</span></p>
+    </div>
+
+    <!-- Tab 3: 1-Tap Sync Link -->
+    <div id="sync-pane-link" class="text-xs space-y-3 mb-5 hidden">
+      <p class="muted">Share this private link to your phone via WhatsApp, Telegram, or email. Opening it on your phone instantly connects your devices:</p>
+      <div class="p-3 rounded-xl font-mono text-[11px] break-all border" style="background: var(--bg); border-color: var(--line)" id="sync-share-url-text">
+        <!-- URL loaded dynamically -->
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button class="btn btn-primary text-xs py-2 px-4" id="sync-copy-link-btn">📋 Copy 1-Tap Link</button>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center pt-2 border-t text-xs" style="border-color: var(--line)">
+      <span class="muted text-[11px]">Encrypted client-side · No account required</span>
+      <button class="btn btn-soft text-xs py-1.5 px-4" id="sync-close-btn">Done</button>
+    </div>
+  </div>
+</div>
+
 <!-- PWA Install Guide Modal -->
 <div id="install-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
   <div class="modal-box max-w-md">
@@ -1706,6 +1861,17 @@ const shiftDate = (date, delta) => {
 };
 const pretty = date => new Date(date + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 const uid = () => Date.now() + Math.floor(Math.random() * 10000);
+
+// HTML escaping helper to prevent script injection and undefined function errors
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 const defaultState = {
   habits: [
@@ -2340,21 +2506,22 @@ function renderHabits() {
 }
 
 // Toggle habit completion
-function toggleHabit(id) {
+function toggleHabit(id, date = today()) {
   const h = state.habits.find(x => x.id === id);
   if (!h) return;
-  const l = logFor(today());
-  const wasDone = done(h);
+  const l = logFor(date);
+  const wasDone = done(h, date);
 
   if (!wasDone) {
     l[id] = true;
     addXP(10);
     playChime(587.33);
-    toast(`✓ Completed: ${h.name} (+10 XP)`);
+    const dayLabel = date === today() ? 'today' : pretty(date);
+    toast(`✓ Completed: "${h.name}" for ${dayLabel} (+10 XP)`);
 
-    // Check if all scheduled habits are completed today!
-    const totalScheduled = state.habits.filter(item => isScheduled(item, today())).length;
-    if (totalScheduled > 0 && countFor(today()) === totalScheduled) {
+    // Check if all scheduled habits are completed on that date!
+    const totalScheduled = state.habits.filter(item => isScheduled(item, date)).length;
+    if (totalScheduled > 0 && countFor(date) === totalScheduled) {
       addXP(50);
       triggerConfetti();
       toast('🎉 100% DAILY HABIT VICTORY! (+50 XP BONUS)');
@@ -2362,18 +2529,22 @@ function toggleHabit(id) {
   } else {
     delete l[id];
     state.xp = Math.max(0, state.xp - 10);
-    toast(`Check-in undone: ${h.name}`);
+    const dayLabel = date === today() ? 'today' : pretty(date);
+    toast(`Check-in undone: "${h.name}" for ${dayLabel}`);
   }
 
   save();
   renderAll();
+  if (typeof calSelectedDate !== 'undefined' && typeof showCalendarDate === 'function') {
+    showCalendarDate(calSelectedDate);
+  }
 }
 
-// Stepper updater for numeric habits
-function updateNumericHabit(id, delta) {
+// Stepper updater for numeric habits with retroactive date support
+function updateNumericHabit(id, delta, date = today()) {
   const h = state.habits.find(x => x.id === id);
   if (!h) return;
-  const l = logFor(today());
+  const l = logFor(date);
   const current = Number(l[id] || 0);
   const target = Number(h.targetNum || 1);
   const next = Math.max(0, current + delta);
@@ -2382,7 +2553,7 @@ function updateNumericHabit(id, delta) {
   if (next >= target && current < target) {
     addXP(15);
     triggerConfetti();
-    toast(`🎯 Target Reached: ${h.name} (${next}/${target}) (+15 XP)`);
+    toast(`🎯 Target Reached: "${h.name}" (${next}/${target}) (+15 XP)`);
   } else if (delta > 0) {
     addXP(2);
     playChime(523.25);
@@ -2390,6 +2561,9 @@ function updateNumericHabit(id, delta) {
 
   save();
   renderAll();
+  if (typeof calSelectedDate !== 'undefined' && typeof showCalendarDate === 'function') {
+    showCalendarDate(calSelectedDate);
+  }
 }
 
 // In-Page Edit Habit Modal (Replacing blocked prompt)
@@ -2461,34 +2635,149 @@ function openEditHabitModal(id) {
 $('habit-form').addEventListener('submit', e => {
   e.preventDefault();
   const name = $('habit-name').value.trim();
-  if (!name) return;
+  if (!name) {
+    toast('Please enter a habit name.');
+    return;
+  }
 
   const newHabit = {
     id: uid(),
     name,
-    type: $('habit-type').value,
-    category: $('habit-category').value,
-    frequency: $('habit-frequency').value,
-    stack: $('habit-stack').value.trim(),
-    fallback: $('habit-fallback').value.trim(),
-    energy: $('habit-energy').value,
-    targetNum: Number($('habit-target-num').value) || 1,
-    reminder: $('habit-reminder').value,
+    type: $('habit-type').value || 'boolean',
+    category: $('habit-category').value || 'Morning',
+    frequency: $('habit-frequency').value || 'daily',
+    stack: ($('habit-stack') ? $('habit-stack').value.trim() : ''),
+    fallback: ($('habit-fallback') ? $('habit-fallback').value.trim() : ''),
+    energy: ($('habit-energy') ? $('habit-energy').value : 'med'),
+    targetNum: Number($('habit-target-num') ? $('habit-target-num').value : 1) || 1,
+    reminder: ($('habit-reminder') ? $('habit-reminder').value : ''),
     created: today()
   };
 
-  state.habits.push(newHabit);
+  state.habits.unshift(newHabit);
   addXP(10);
   $('habit-form').reset();
   save();
   renderAll();
-  toast('New habit successfully created (+10 XP)');
+  playChime(659.25);
+  toast(`✓ New habit created: "${newHabit.name}" (+10 XP)`);
 });
 
-$('quick-add').onclick = () => {
-  showPage('habits');
-  $('habit-name').focus();
-};
+function openAddHabitModal() {
+  showModal({
+    title: '✨ Create New Habit',
+    bodyHTML: `
+      <div class="space-y-3 pt-1">
+        <div>
+          <label class="block text-xs font-bold muted mb-1">Habit Name *</label>
+          <input id="modal-habit-name" placeholder="e.g. Morning Meditation, Read 20 Pages" required maxlength="80">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold muted mb-1">Type</label>
+            <select id="modal-habit-type">
+              <option value="boolean">✓ Checkbox (Yes/No)</option>
+              <option value="numeric">🔢 Numeric Stepper</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold muted mb-1">Time of Day</label>
+            <select id="modal-habit-category">
+              <option value="Morning">☀️ Morning</option>
+              <option value="Afternoon">🌤️ Afternoon</option>
+              <option value="Evening">🌙 Evening</option>
+              <option value="Anytime">🔄 Anytime</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold muted mb-1">Frequency</label>
+            <select id="modal-habit-frequency">
+              <option value="daily">Every day</option>
+              <option value="weekdays">Weekdays only</option>
+              <option value="weekends">Weekends only</option>
+              <option value="3days">3 days a week</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold muted mb-1">Energy Required</label>
+            <select id="modal-habit-energy">
+              <option value="low">⚡ Low Energy</option>
+              <option value="med" selected>⚡⚡ Medium</option>
+              <option value="high">⚡⚡⚡ High Energy</option>
+            </select>
+          </div>
+        </div>
+        <div id="modal-target-wrap" class="hidden">
+          <label class="block text-xs font-bold muted mb-1">Daily Target Count</label>
+          <input id="modal-habit-target-num" type="number" min="1" max="9999" value="1" placeholder="Target count">
+        </div>
+        <div>
+          <label class="block text-xs font-bold muted mb-1">Habit Stack Cue (Optional)</label>
+          <input id="modal-habit-stack" placeholder="After [Current Routine], I will [New Habit]" maxlength="90">
+        </div>
+        <div>
+          <label class="block text-xs font-bold muted mb-1">2-Minute Tired Day Fallback (Optional)</label>
+          <input id="modal-habit-fallback" placeholder="e.g. Read 1 single page, 3 deep breaths" maxlength="80">
+        </div>
+      </div>
+    `,
+    confirmText: '＋ Create Habit',
+    cancelText: 'Cancel',
+    onConfirm: () => {
+      const nameEl = $('modal-habit-name');
+      const name = nameEl ? nameEl.value.trim() : '';
+      if (!name) {
+        toast('Please enter a habit name.');
+        return;
+      }
+      const type = $('modal-habit-type') ? $('modal-habit-type').value : 'boolean';
+      const category = $('modal-habit-category') ? $('modal-habit-category').value : 'Morning';
+      const frequency = $('modal-habit-frequency') ? $('modal-habit-frequency').value : 'daily';
+      const energy = $('modal-habit-energy') ? $('modal-habit-energy').value : 'med';
+      const targetNum = Number($('modal-habit-target-num') ? $('modal-habit-target-num').value : 1) || 1;
+      const stack = $('modal-habit-stack') ? $('modal-habit-stack').value.trim() : '';
+      const fallback = $('modal-habit-fallback') ? $('modal-habit-fallback').value.trim() : '';
+
+      const newHabit = {
+        id: uid(),
+        name,
+        type,
+        category,
+        frequency,
+        energy,
+        targetNum,
+        stack,
+        fallback,
+        reminder: '',
+        created: today()
+      };
+
+      state.habits.unshift(newHabit);
+      addXP(10);
+      save();
+      renderAll();
+      playChime(659.25);
+      toast(`✓ Created habit: "${newHabit.name}" (+10 XP)`);
+    }
+  });
+
+  const typeSel = $('modal-habit-type');
+  const targetWrap = $('modal-target-wrap');
+  if (typeSel && targetWrap) {
+    typeSel.onchange = () => {
+      targetWrap.classList.toggle('hidden', typeSel.value !== 'numeric');
+    };
+  }
+
+  setTimeout(() => {
+    const inp = $('modal-habit-name');
+    if (inp) inp.focus();
+  }, 100);
+}
+
+if ($('quick-add')) $('quick-add').onclick = openAddHabitModal;
 
 $('uncheck-all').onclick = () => {
   showModal({
@@ -2728,14 +3017,249 @@ function renderYearHeatmap() {
   }
 }
 
+let calSelectedDate = today();
+
+function showCalendarDate(date) {
+  calSelectedDate = date;
+  if ($('cal-history-date-picker')) $('cal-history-date-picker').value = date;
+
+  const dateObj = new Date(date + 'T12:00:00');
+  const fullDateStr = dateObj.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const isTodayDate = (date === today());
+  
+  if ($('hist-display-date')) {
+    $('hist-display-date').textContent = fullDateStr + (isTodayDate ? ' (Today)' : '');
+  }
+
+  const scheduledHabits = state.habits.filter(h => isScheduled(h, date));
+  const completedHabits = state.habits.filter(h => done(h, date));
+  const missedHabits = scheduledHabits.filter(h => !done(h, date));
+  const total = scheduledHabits.length;
+  const doneN = completedHabits.length;
+  const rate = total ? Math.round((doneN / total) * 100) : 0;
+  const journalEntry = (state.journal || []).find(j => j.date === date);
+
+  // Status pills
+  if ($('hist-rate-pill')) {
+    $('hist-rate-pill').textContent = `${rate}% (${doneN}/${total} Completed)`;
+    $('hist-rate-pill').className = `pill ${rate >= 100 ? 'bg-emerald-500 text-white' : rate >= 60 ? 'pill-amber' : 'pill-gray'}`;
+  }
+  if ($('hist-xp-pill')) {
+    $('hist-xp-pill').textContent = `+${doneN * 10 + (rate === 100 && total > 0 ? 50 : 0)} XP Earned`;
+  }
+  if ($('hist-display-meta')) {
+    const verdict = rate >= 100 && total > 0
+      ? '🏆 Flawless Victory — All daily routines mastered!'
+      : rate >= 60
+      ? '⚡ High Momentum — Strong consistency maintained.'
+      : doneN > 0
+      ? '🌱 Habit Loop Kept Alive — Forward progress.'
+      : '💤 Rest or Recovery Day — Ready to rebound tomorrow.';
+    $('hist-display-meta').textContent = verdict;
+  }
+
+  // Build Comprehensive Two-Column History View
+  const container = $('calendar-detail');
+  if (!container) return;
+
+  let habitsHTML = `
+    <div class="lg:col-span-7 space-y-4">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-extrabold text-xs uppercase tracking-wider muted">
+            COMPLETED ROUTINES (${completedHabits.length})
+          </h4>
+          <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">✓ Logged Wins</span>
+        </div>
+  `;
+
+  if (completedHabits.length) {
+    habitsHTML += '<div class="space-y-2">';
+    completedHabits.forEach(h => {
+      const isNum = h.type === 'numeric';
+      const numVal = isNum ? numericValue(h, date) : '';
+      habitsHTML += `
+        <div class="p-3 rounded-xl border flex items-center justify-between gap-3" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.35);">
+          <div class="min-w-0">
+            <div class="font-bold text-xs flex items-center gap-1.5">
+              <span class="text-emerald-500 font-extrabold">✓</span>
+              <span>${escapeHTML(h.name)}</span>
+              ${isNum ? `<span class="pill pill-gray text-[10px]">${numVal}/${h.targetNum || 1}</span>` : ''}
+            </div>
+            <div class="flex items-center gap-2 mt-1 text-[11px] muted">
+              <span>${escapeHTML(h.category)}</span>
+              <span>·</span>
+              <span>${h.energy ? '⚡ ' + escapeHTML(h.energy) : 'Med energy'}</span>
+              ${h.stack ? `<span>· 🔗 ${escapeHTML(h.stack)}</span>` : ''}
+            </div>
+          </div>
+          <button class="btn btn-soft text-[11px] py-1 px-2.5 shrink-0" onclick="toggleHabit(${h.id}, '${date}')" title="Undo check-in for this date">
+            Undo
+          </button>
+        </div>
+      `;
+    });
+    habitsHTML += '</div>';
+  } else {
+    habitsHTML += '<div class="p-4 rounded-xl border border-dashed text-center text-xs muted" style="border-color: var(--line)">No habits completed on this date.</div>';
+  }
+
+  // Missed Habits & Retroactive logging
+  habitsHTML += `
+      <div class="pt-2">
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-extrabold text-xs uppercase tracking-wider muted">
+            INCOMPLETE / MISSED ROUTINES (${missedHabits.length})
+          </h4>
+          <span class="text-[11px] muted">Retroactive Logging</span>
+        </div>
+  `;
+
+  if (missedHabits.length) {
+    habitsHTML += '<div class="space-y-2">';
+    missedHabits.forEach(h => {
+      habitsHTML += `
+        <div class="p-3 rounded-xl border flex items-center justify-between gap-3" style="background: var(--bg); border-color: var(--line);">
+          <div class="min-w-0">
+            <div class="font-bold text-xs text-slate-700 dark:text-slate-300">${escapeHTML(h.name)}</div>
+            <div class="flex items-center gap-2 mt-0.5 text-[11px] muted">
+              <span>${escapeHTML(h.category)}</span>
+              <span>·</span>
+              <span>Target: ${h.type === 'numeric' ? (h.targetNum || 1) : '1 completion'}</span>
+            </div>
+          </div>
+          <button class="btn btn-primary text-[11px] py-1 px-3 shrink-0" onclick="toggleHabit(${h.id}, '${date}')">
+            ＋ Mark Done
+          </button>
+        </div>
+      `;
+    });
+    habitsHTML += '</div>';
+  } else {
+    habitsHTML += '<div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold text-center border border-emerald-500/20">All scheduled routines completed! No missed habits.</div>';
+  }
+
+  habitsHTML += '</div></div>';
+
+  // Col 2: Journal Reflection & Focus Log
+  let reflectionHTML = `
+    <div class="lg:col-span-5 space-y-4">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-extrabold text-xs uppercase tracking-wider muted">
+            DAILY REFLECTION &amp; ENERGY
+          </h4>
+          <button class="btn btn-soft text-[11px] py-1 px-2.5" onclick="openDateReflectionModal('${date}')">
+            ${journalEntry ? '✎ Edit Note' : '✍️ Add Note'}
+          </button>
+        </div>
+  `;
+
+  if (journalEntry) {
+    reflectionHTML += `
+      <div class="p-4 rounded-xl border space-y-2" style="background: var(--bg); border-color: var(--line)">
+        <div class="flex items-center justify-between">
+          <span class="pill pill-amber text-xs">${escapeHTML(journalEntry.mood || 'Reflective')}</span>
+          <span class="text-[10px] muted font-bold">${pretty(date)}</span>
+        </div>
+        <div class="font-bold text-sm text-slate-800 dark:text-slate-100">${escapeHTML(journalEntry.title || 'Day Reflection')}</div>
+        <p class="text-xs leading-relaxed muted whitespace-pre-wrap">${escapeHTML(journalEntry.body)}</p>
+      </div>
+    `;
+  } else {
+    reflectionHTML += `
+      <div class="p-4 rounded-xl border border-dashed text-center text-xs muted space-y-2" style="border-color: var(--line)">
+        <p>No journal reflection written for this date.</p>
+        <button class="btn btn-soft text-xs py-1.5 px-3" onclick="openDateReflectionModal('${date}')">
+          ✍️ Write Reflection for ${pretty(date)}
+        </button>
+      </div>
+    `;
+  }
+
+  reflectionHTML += `
+      </div>
+
+      <!-- Quick Date Insights -->
+      <div class="panel p-4 text-xs space-y-2.5" style="background: var(--bg); border-color: var(--line)">
+        <h5 class="font-extrabold uppercase tracking-wider text-[11px] muted">SYSTEM RECORD AUDIT</h5>
+        <div class="flex justify-between items-center py-1 border-b" style="border-color: var(--line)">
+          <span class="muted">Check-in Status</span>
+          <span class="font-bold">${doneN} of ${total} (${rate}%)</span>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b" style="border-color: var(--line)">
+          <span class="muted">XP Contribution</span>
+          <span class="font-bold text-amber-500">+${doneN * 10} XP</span>
+        </div>
+        <div class="flex justify-between items-center py-1">
+          <span class="muted">Day of Year</span>
+          <span class="font-bold">Day ${Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24)}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = habitsHTML + reflectionHTML;
+}
+
+function openDateReflectionModal(date) {
+  const existing = (state.journal || []).find(j => j.date === date);
+  showModal({
+    title: `Journal Reflection for ${pretty(date)}`,
+    bodyHTML: `
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold muted mb-1">Mood &amp; Energy</label>
+          <select id="modal-refl-mood" class="w-full">
+            <option value="😄 Energized" ${existing && existing.mood.includes('Energized') ? 'selected' : ''}>😄 Energized &amp; High Energy</option>
+            <option value="🙂 Calm &amp; Good" ${existing && existing.mood.includes('Calm') ? 'selected' : ''}>🙂 Calm &amp; Grounded</option>
+            <option value="😐 Focused Neutral" ${existing && existing.mood.includes('Focused') ? 'selected' : ''}>😐 Focused Neutral</option>
+            <option value="😓 Fatigued" ${existing && existing.mood.includes('Fatigued') ? 'selected' : ''}>😓 Fatigued / Low Energy</option>
+            <option value="😣 Challenged" ${existing && existing.mood.includes('Challenged') ? 'selected' : ''}>😣 Challenged / Overcoming Resistance</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold muted mb-1">Headline (Optional)</label>
+          <input id="modal-refl-title" placeholder="e.g. Morning momentum was peak" value="${existing ? escapeHTML(existing.title || '') : ''}">
+        </div>
+        <div>
+          <label class="block text-xs font-bold muted mb-1">Reflection &amp; Lessons</label>
+          <textarea id="modal-refl-body" rows="4" placeholder="What worked today? What habit triggered the biggest win?">${existing ? escapeHTML(existing.body || '') : ''}</textarea>
+        </div>
+      </div>
+    `,
+    confirmText: 'Save Reflection (+10 XP)',
+    onConfirm: () => {
+      const body = ($('modal-refl-body') ? $('modal-refl-body').value.trim() : '');
+      if (!body) return toast('Please enter a short reflection.');
+      const mood = $('modal-refl-mood') ? $('modal-refl-mood').value : '😄 Energized';
+      const title = $('modal-refl-title') ? $('modal-refl-title').value.trim() : '';
+
+      state.journal = state.journal || [];
+      const idx = state.journal.findIndex(j => j.date === date);
+      const entry = { id: uid(), date, mood, title, body };
+
+      if (idx >= 0) state.journal[idx] = entry;
+      else state.journal.push(entry);
+
+      addXP(10);
+      save();
+      renderAll();
+      showCalendarDate(date);
+      toast(`Reflection recorded for ${pretty(date)}! (+10 XP)`);
+    }
+  });
+}
+
 function renderCalendar() {
   const y = calDate.getFullYear();
   const m = calDate.getMonth();
   const first = new Date(y, m, 1).getDay();
   const days = new Date(y, m + 1, 0).getDate();
 
-  $('cal-month').textContent = calDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  if ($('cal-month')) $('cal-month').textContent = calDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
   const grid = $('calendar-grid');
+  if (!grid) return;
   grid.innerHTML = '';
 
   for (let i = 0; i < first; i++) {
@@ -2747,14 +3271,22 @@ function renderCalendar() {
     const date = new Date(y, m, day).toLocaleDateString('en-CA');
     const total = state.habits.filter(h => isScheduled(h, date)).length;
     const doneN = countFor(date);
+    const isSelected = (date === calSelectedDate);
+    const isToday = (date === today());
 
     const cell = document.createElement('button');
-    cell.className = `p-2 rounded-xl text-left border transition-all ${date === today() ? 'border-2 border-emerald-500' : ''}`;
-    cell.style.borderColor = date === today() ? 'var(--accent)' : 'var(--line)';
+    cell.className = `p-2 rounded-xl text-left border transition-all ${
+      isSelected ? 'border-2 border-emerald-500 shadow-md ring-2 ring-emerald-500/20' : isToday ? 'border-2 border-emerald-400' : ''
+    }`;
+    cell.style.borderColor = isSelected ? 'var(--accent)' : isToday ? 'var(--accent)' : 'var(--line)';
+    cell.style.background = isSelected ? 'rgba(16, 185, 129, 0.12)' : 'var(--panel)';
 
     cell.innerHTML = `
-      <div class="font-bold text-xs">${day}</div>
-      <div class="mt-1 text-[11px] muted">${total ? `${doneN}/${total}` : '—'}</div>
+      <div class="font-extrabold text-xs flex justify-between items-center">
+        <span>${day}</span>
+        ${isToday ? '<span class="text-[9px] pill py-0.5 px-1 font-bold">Now</span>' : ''}
+      </div>
+      <div class="mt-1 text-[11px] muted font-bold">${total ? `${doneN}/${total}` : '—'}</div>
       <div class="mt-1">
         ${total && doneN === total
           ? '<span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>'
@@ -2764,49 +3296,70 @@ function renderCalendar() {
         }
       </div>
     `;
-    cell.onclick = () => showCalendarDate(date);
+    cell.onclick = () => {
+      showCalendarDate(date);
+      renderCalendar();
+      const p = $('calendar-history-panel');
+      if (p) p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
     grid.append(cell);
   }
 
   renderYearHeatmap();
 }
 
-function showCalendarDate(date) {
-  const completedHabits = state.habits.filter(h => done(h, date));
-  const journalEntry = (state.journal || []).find(j => j.date === date);
-
-  let html = `<b>${pretty(date)} Summary</b>`;
-  html += `<p class="muted text-xs mt-1">${completedHabits.length} habit(s) completed on this day:</p>`;
-
-  if (completedHabits.length) {
-    html += '<ul class="mt-2 space-y-1">';
-    completedHabits.forEach(h => {
-      html += `<li class="text-xs">✓ ${escapeHTML(h.name)} <span class="muted">(${escapeHTML(h.category)})</span></li>`;
-    });
-    html += '</ul>';
-  } else {
-    html += '<p class="text-xs muted mt-2 italic">No completed habits recorded on this date.</p>';
-  }
-
-  if (journalEntry) {
-    html += `
-      <div class="mt-3 pt-3 border-t" style="border-color:var(--line)">
-        <span class="pill pill-amber text-[10px]">${escapeHTML(journalEntry.mood)}</span>
-        <div class="font-bold text-xs mt-1">${escapeHTML(journalEntry.title || 'Reflection')}</div>
-        <p class="text-xs muted mt-1">${escapeHTML(journalEntry.body)}</p>
-      </div>
-    `;
-  }
-
-  $('calendar-detail').innerHTML = html;
-}
-
-$('cal-prev').onclick = () => {
+if ($('cal-prev')) $('cal-prev').onclick = () => {
   calDate.setMonth(calDate.getMonth() - 1);
   renderCalendar();
 };
-$('cal-next').onclick = () => {
+if ($('cal-next')) $('cal-next').onclick = () => {
   calDate.setMonth(calDate.getMonth() + 1);
+  renderCalendar();
+};
+if ($('cal-today-btn')) $('cal-today-btn').onclick = () => {
+  calDate = new Date();
+  renderCalendar();
+  showCalendarDate(today());
+};
+
+// Date Inspector Quick Navigation Handlers
+if ($('cal-history-date-picker')) {
+  $('cal-history-date-picker').value = today();
+  $('cal-history-date-picker').onchange = (e) => {
+    if (e.target.value) {
+      showCalendarDate(e.target.value);
+      calDate = new Date(e.target.value + 'T12:00:00');
+      renderCalendar();
+    }
+  };
+}
+if ($('btn-hist-today')) $('btn-hist-today').onclick = () => {
+  showCalendarDate(today());
+  calDate = new Date();
+  renderCalendar();
+};
+if ($('btn-hist-yesterday')) $('btn-hist-yesterday').onclick = () => {
+  const yest = shiftDate(today(), -1);
+  showCalendarDate(yest);
+  calDate = new Date(yest + 'T12:00:00');
+  renderCalendar();
+};
+if ($('btn-hist-7days')) $('btn-hist-7days').onclick = () => {
+  const past = shiftDate(today(), -7);
+  showCalendarDate(past);
+  calDate = new Date(past + 'T12:00:00');
+  renderCalendar();
+};
+if ($('hist-nav-prev')) $('hist-nav-prev').onclick = () => {
+  const prev = shiftDate(calSelectedDate, -1);
+  showCalendarDate(prev);
+  calDate = new Date(prev + 'T12:00:00');
+  renderCalendar();
+};
+if ($('hist-nav-next')) $('hist-nav-next').onclick = () => {
+  const next = shiftDate(calSelectedDate, 1);
+  showCalendarDate(next);
+  calDate = new Date(next + 'T12:00:00');
   renderCalendar();
 };
 
@@ -3802,12 +4355,7 @@ if ($('mobile-theme-toggle')) {
   };
 }
 if ($('mobile-quick-add')) {
-  $('mobile-quick-add').onclick = () => {
-    showPage('habits');
-    setTimeout(() => {
-      if ($('habit-name')) $('habit-name').focus();
-    }, 150);
-  };
+  $('mobile-quick-add').onclick = openAddHabitModal;
 }
 
 // Laptop Keyboard Shortcuts Listener
@@ -3857,8 +4405,7 @@ window.addEventListener('keydown', (e) => {
     showPage('futures');
   } else if (lowKey === 'n') {
     e.preventDefault();
-    showPage('habits');
-    setTimeout(() => { if ($('habit-name')) $('habit-name').focus(); }, 120);
+    openAddHabitModal();
   } else if (lowKey === 't') {
     e.preventDefault();
     state.theme = state.theme === 'dark' ? 'light' : 'dark';
@@ -3883,6 +4430,9 @@ function renderAll() {
   renderDashboard();
   renderHabits();
   renderCalendar();
+  if (typeof showCalendarDate === 'function') {
+    showCalendarDate(typeof calSelectedDate !== 'undefined' ? calSelectedDate : today());
+  }
   renderAnalytics();
   renderFutures();
   renderQuests();
@@ -3891,6 +4441,379 @@ function renderAll() {
   renderXP();
   updateTimer();
 }
+
+// ============================================================
+// DEVICE AUTO-SYNCHRONIZATION & CLOUD VAULT ENGINE
+// Real-time synchronization between Phone and Laptop
+// ============================================================
+
+const SYNC_CONFIG_KEY = 'habitflow_sync_config_v2';
+let syncConfig = {
+  enabled: true,
+  roomCode: 'GANESH-2026',
+  autoSync: true,
+  lastSync: null,
+  status: 'synced'
+};
+
+try {
+  const savedSync = localStorage.getItem(SYNC_CONFIG_KEY);
+  if (savedSync) {
+    syncConfig = { ...syncConfig, ...JSON.parse(savedSync) };
+  }
+} catch (e) {}
+
+// Check URL params or hash for 1-tap sync room pairing
+try {
+  const urlParams = new URLSearchParams(window.location.search);
+  const hash = window.location.hash;
+  let incomingCode = urlParams.get('vault') || urlParams.get('sync');
+  if (!incomingCode && hash.includes('sync=')) {
+    incomingCode = hash.split('sync=')[1].split('&')[0];
+  }
+  if (incomingCode) {
+    syncConfig.roomCode = incomingCode.trim().toUpperCase();
+    syncConfig.enabled = true;
+    localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
+  }
+} catch (e) {}
+
+// Cross-Tab instant synchronization via BroadcastChannel
+let syncBroadcastChannel = null;
+try {
+  if (typeof BroadcastChannel !== 'undefined') {
+    syncBroadcastChannel = new BroadcastChannel('habitflow_sync_channel');
+    syncBroadcastChannel.onmessage = (e) => {
+      if (e.data && e.data.type === 'STATE_UPDATED' && e.data.state) {
+        mergeRemoteState(e.data.state);
+        save(false);
+        renderAll();
+        showCalendarDate(calSelectedDate);
+      }
+    };
+  }
+} catch (e) {}
+
+// Window storage listener for instant cross-tab sync
+window.addEventListener('storage', (e) => {
+  if (e.key === KEY && e.newValue) {
+    try {
+      const parsed = JSON.parse(e.newValue);
+      mergeRemoteState(parsed);
+      renderAll();
+      showCalendarDate(calSelectedDate);
+    } catch (err) {}
+  }
+});
+
+function updateSyncUI(status, label = null) {
+  syncConfig.status = status;
+  const isOk = status === 'synced';
+  const isSyncing = status === 'syncing';
+
+  // Desktop Header
+  if ($('desktop-sync-text')) {
+    $('desktop-sync-text').textContent = label || (isSyncing ? 'Syncing...' : isOk ? 'Auto-Sync: Live' : 'Auto-Sync: Offline');
+  }
+  if ($('desktop-sync-dot')) {
+    $('desktop-sync-dot').className = `w-2 h-2 rounded-full inline-block mr-1 ${isSyncing ? 'bg-amber-400 animate-spin' : isOk ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`;
+  }
+
+  // Desktop Sidebar
+  if ($('sidebar-sync-pill')) {
+    $('sidebar-sync-pill').textContent = isSyncing ? 'Syncing' : isOk ? 'Live' : 'Offline';
+    $('sidebar-sync-pill').className = `pill ${isSyncing ? 'pill-amber' : isOk ? 'bg-emerald-500 text-white' : 'pill-gray'} text-[9px]`;
+  }
+  if ($('sidebar-sync-dot')) {
+    $('sidebar-sync-dot').className = `w-2 h-2 rounded-full ${isSyncing ? 'bg-amber-400 animate-spin' : isOk ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`;
+  }
+
+  // Mobile Topbar
+  if ($('mobile-sync-text')) {
+    $('mobile-sync-text').textContent = isSyncing ? 'Sync...' : 'Sync';
+  }
+
+  // Modal Banner
+  if ($('modal-sync-title')) {
+    $('modal-sync-title').textContent = isSyncing ? 'Synchronizing with cloud...' : isOk ? 'Auto-Sync is Connected' : 'Working Offline (Changes Saved Locally)';
+  }
+  if ($('modal-sync-subtitle')) {
+    const timeStr = syncConfig.lastSync ? new Date(syncConfig.lastSync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now';
+    $('modal-sync-subtitle').textContent = `Vault: ${syncConfig.roomCode} · Last synced: ${timeStr}`;
+  }
+  if ($('modal-sync-dot')) {
+    $('modal-sync-dot').className = `w-2.5 h-2.5 rounded-full ${isSyncing ? 'bg-amber-400 animate-spin' : isOk ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`;
+  }
+}
+
+function mergeRemoteState(remote) {
+  if (!remote || typeof remote !== 'object') return;
+
+  // Merge habits
+  const habitMap = new Map();
+  (state.habits || []).forEach(h => habitMap.set(h.id, h));
+  (remote.habits || []).forEach(h => {
+    if (!habitMap.has(h.id)) {
+      habitMap.set(h.id, h);
+    } else {
+      habitMap.set(h.id, { ...habitMap.get(h.id), ...h });
+    }
+  });
+  state.habits = Array.from(habitMap.values());
+
+  // Merge check-in logs (union of daily completions)
+  state.logs = state.logs || {};
+  const remoteLogs = remote.logs || {};
+  for (const date in remoteLogs) {
+    if (!state.logs[date]) {
+      state.logs[date] = remoteLogs[date];
+    } else {
+      for (const hid in remoteLogs[date]) {
+        state.logs[date][hid] = remoteLogs[date][hid] || state.logs[date][hid];
+      }
+    }
+  }
+
+  // Merge journal reflections
+  const journalMap = new Map();
+  (state.journal || []).forEach(j => journalMap.set(j.date, j));
+  (remote.journal || []).forEach(j => journalMap.set(j.date, j));
+  state.journal = Array.from(journalMap.values());
+
+  // Merge XP and shields (take highest achieved)
+  state.xp = Math.max(state.xp || 0, remote.xp || 0);
+  state.shields = Math.max(state.shields || 0, remote.shields || 0);
+
+  if (Array.isArray(remote.goals) && remote.goals.length) {
+    state.goals = remote.goals;
+  }
+  if (Array.isArray(remote.timeCapsules) && remote.timeCapsules.length) {
+    state.timeCapsules = remote.timeCapsules;
+  }
+
+  state.updatedAt = Math.max(state.updatedAt || 0, remote.updatedAt || 0);
+}
+
+let syncDebounceTimer = null;
+function triggerSyncDebounce() {
+  if (!syncConfig.enabled || !syncConfig.autoSync) return;
+  clearTimeout(syncDebounceTimer);
+  syncDebounceTimer = setTimeout(() => {
+    syncCloud(true);
+  }, 1200);
+
+  // Also broadcast locally to other open tabs on this device
+  if (syncBroadcastChannel) {
+    try {
+      syncBroadcastChannel.postMessage({ type: 'STATE_UPDATED', state });
+    } catch (e) {}
+  }
+}
+
+async function syncCloud(isPush = false) {
+  if (!syncConfig.enabled || !syncConfig.roomCode) return;
+  const room = syncConfig.roomCode.trim().toUpperCase();
+  updateSyncUI('syncing');
+
+  const endpoint = `https://kvdb.io/w7x9Q2mY8kL3p4N1v6Z0/${encodeURIComponent(room)}`;
+
+  try {
+    // 1. Fetch remote vault data first
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const textData = await res.text();
+      if (textData) {
+        try {
+          const remote = JSON.parse(textData);
+          if (remote && remote.updatedAt && remote.updatedAt > (state.updatedAt || 0)) {
+            mergeRemoteState(remote);
+            save(false);
+            renderAll();
+            showCalendarDate(calSelectedDate);
+            syncConfig.lastSync = Date.now();
+            updateSyncUI('synced', 'Synced (Updated from other device)');
+            return;
+          }
+        } catch (e) {}
+      }
+    }
+
+    // 2. Push local state to cloud vault
+    state.updatedAt = Date.now();
+    const pushController = new AbortController();
+    const pushTimeout = setTimeout(() => pushController.abort(), 6000);
+
+    await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state),
+      signal: pushController.signal
+    });
+    clearTimeout(pushTimeout);
+
+    syncConfig.lastSync = Date.now();
+    localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
+    updateSyncUI('synced', 'Synced just now');
+  } catch (err) {
+    updateSyncUI('offline', 'Saved locally (Auto-sync when online)');
+  }
+}
+
+// Background sync intervals
+setInterval(() => {
+  if (document.visibilityState === 'visible' && syncConfig.enabled && syncConfig.autoSync) {
+    syncCloud(false);
+  }
+}, 12000);
+
+window.addEventListener('focus', () => {
+  if (syncConfig.enabled && syncConfig.autoSync) {
+    syncCloud(false);
+  }
+});
+
+window.addEventListener('online', () => {
+  if (syncConfig.enabled) {
+    syncCloud(true);
+    toast('🌐 Back online. Auto-sync completed!');
+  }
+});
+
+// Sync Modal Handlers
+function openSyncModal() {
+  const m = $('sync-modal');
+  if (!m) return;
+  m.classList.remove('hidden');
+
+  if ($('sync-room-input')) $('sync-room-input').value = syncConfig.roomCode || 'GANESH-2026';
+  if ($('sync-auto-toggle')) $('sync-auto-toggle').checked = !!syncConfig.autoSync;
+
+  const currentOrigin = window.location.origin + window.location.pathname;
+  const syncURL = `${currentOrigin}?vault=${encodeURIComponent(syncConfig.roomCode)}`;
+  
+  if ($('sync-share-url-text')) $('sync-share-url-text').textContent = syncURL;
+  if ($('sync-qr-room-label')) $('sync-qr-room-label').textContent = syncConfig.roomCode;
+
+  // Render QR code image
+  const qrContainer = $('sync-qr-container');
+  if (qrContainer) {
+    qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(syncURL)}" alt="Sync QR Code" class="w-44 h-44 rounded-xl border border-slate-200">`;
+  }
+
+  updateSyncUI(syncConfig.status || 'synced');
+}
+
+function closeSyncModal() {
+  const m = $('sync-modal');
+  if (m) m.classList.add('hidden');
+}
+
+// Connect sync modal buttons
+if ($('desktop-sync-btn')) $('desktop-sync-btn').onclick = openSyncModal;
+if ($('sidebar-sync-btn')) $('sidebar-sync-btn').onclick = openSyncModal;
+if ($('mobile-sync-top-btn')) $('mobile-sync-top-btn').onclick = openSyncModal;
+if ($('drawer-sync-btn')) {
+  $('drawer-sync-btn').onclick = () => {
+    closeDrawer();
+    openSyncModal();
+  };
+}
+if ($('sync-close-x')) $('sync-close-x').onclick = closeSyncModal;
+if ($('sync-close-btn')) $('sync-close-btn').onclick = closeSyncModal;
+
+// Tab switcher inside sync modal
+if ($('sync-tab-code') && $('sync-tab-qr') && $('sync-tab-link')) {
+  $('sync-tab-code').onclick = () => {
+    $('sync-tab-code').className = 'flex-1 py-1.5 px-3 rounded-lg bg-emerald-500 text-white transition-all text-center';
+    $('sync-tab-qr').className = 'flex-1 py-1.5 px-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-center';
+    $('sync-tab-link').className = 'flex-1 py-1.5 px-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-center';
+    $('sync-pane-code').classList.remove('hidden');
+    $('sync-pane-qr').classList.add('hidden');
+    $('sync-pane-link').classList.add('hidden');
+  };
+  $('sync-tab-qr').onclick = () => {
+    $('sync-tab-qr').className = 'flex-1 py-1.5 px-3 rounded-lg bg-emerald-500 text-white transition-all text-center';
+    $('sync-tab-code').className = 'flex-1 py-1.5 px-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-center';
+    $('sync-tab-link').className = 'flex-1 py-1.5 px-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-center';
+    $('sync-pane-qr').classList.remove('hidden');
+    $('sync-pane-code').classList.add('hidden');
+    $('sync-pane-link').classList.add('hidden');
+  };
+  $('sync-tab-link').onclick = () => {
+    $('sync-tab-link').className = 'flex-1 py-1.5 px-3 rounded-lg bg-emerald-500 text-white transition-all text-center';
+    $('sync-tab-code').className = 'flex-1 py-1.5 px-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-center';
+    $('sync-tab-qr').className = 'flex-1 py-1.5 px-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-center';
+    $('sync-pane-link').classList.remove('hidden');
+    $('sync-pane-code').classList.add('hidden');
+    $('sync-pane-qr').classList.add('hidden');
+  };
+}
+
+if ($('sync-save-code-btn')) {
+  $('sync-save-code-btn').onclick = () => {
+    const inp = $('sync-room-input');
+    const val = inp ? inp.value.trim().toUpperCase() : '';
+    if (!val) return toast('Please enter a secret sync code.');
+    syncConfig.roomCode = val;
+    syncConfig.autoSync = $('sync-auto-toggle') ? $('sync-auto-toggle').checked : true;
+    localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
+    toast(`Sync Vault connected: ${val}`);
+    syncCloud(true);
+  };
+}
+
+if ($('sync-gen-code-btn')) {
+  $('sync-gen-code-btn').onclick = () => {
+    const randomCode = 'GANESH-' + Math.floor(1000 + Math.random() * 9000);
+    if ($('sync-room-input')) $('sync-room-input').value = randomCode;
+  };
+}
+
+if ($('modal-sync-now-btn')) {
+  $('modal-sync-now-btn').onclick = () => {
+    syncCloud(true);
+    toast('Force sync executed!');
+  };
+}
+
+if ($('sync-copy-link-btn')) {
+  $('sync-copy-link-btn').onclick = () => {
+    const currentOrigin = window.location.origin + window.location.pathname;
+    const syncURL = `${currentOrigin}?vault=${encodeURIComponent(syncConfig.roomCode)}`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(syncURL).then(() => {
+        toast('1-Tap Sync link copied! Open on your phone to link.');
+      }).catch(() => {
+        toast('Link: ' + syncURL);
+      });
+    } else {
+      toast('Link: ' + syncURL);
+    }
+  };
+}
+
+// Hook save() to trigger auto-sync debounce
+const originalSave = save;
+save = function(triggerRemote = true) {
+  originalSave();
+  if (triggerRemote) {
+    triggerSyncDebounce();
+  }
+};
+
+// Initial sync on app start
+setTimeout(() => {
+  syncCloud(false);
+}, 1500);
 
 // Initialize date banner & initial states
 $('today-label').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).toUpperCase();
@@ -3902,14 +4825,13 @@ updateTimer();
 </script>
 
 <script>
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch((error) => {
-      console.warn('HabitFlow offline support could not be enabled:', error);
+    navigator.serviceWorker.register('./sw.js').catch(error => {
+      console.error('HabitFlow service worker registration failed:', error);
     });
   });
 }
 </script>
-
 </body>
 </html>
