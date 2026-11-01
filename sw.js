@@ -1,69 +1,79 @@
+/* Ganesh's HabitFlow — offline service worker */
+"use strict";
 
-const CACHE_NAME = 'ganesh-habitflow-v3';
-
+const CACHE_NAME = "habitflow-shell-v1";
 const APP_SHELL = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  "./",
+  "./index.html"
 ];
 
-self.addEventListener('install', event => {
+// Install: cache the application shell.
+self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL))
+      .then((cache) => cache.addAll(APP_SHELL))
       .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('activate', event => {
+// Activate: remove older HabitFlow caches and control open pages.
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
-      .then(keys =>
-        Promise.all(
-          keys
-            .filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
-        )
-      )
+      .then((keys) => Promise.all(
+        keys
+          .filter((key) => key.startsWith("habitflow-") && key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      ))
       .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', event => {
+// Navigation: prefer the latest HTML, fall back to the cached app offline.
+// Other same-origin GET requests: network first, then cache.
+self.addEventListener("fetch", (event) => {
   const request = event.request;
-
-  if (request.method !== 'GET') return;
-
   const url = new URL(request.url);
 
-  if (url.origin === self.location.origin) {
+  if (request.method !== "GET" || url.origin !== self.location.origin) {
+    return;
+  }
+
+  if (request.mode === "navigate") {
     event.respondWith(
-      caches.match(request).then(cached =>
-        cached ||
-        fetch(request).then(response => {
+      fetch(request)
+        .then((response) => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE_NAME).then(cache =>
-              cache.put(request, copy)
-            );
+            caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy));
           }
           return response;
-        }).catch(() => caches.match('./index.html'))
-      )
+        })
+        .catch(async () => {
+          return (await caches.match(request)) ||
+                 (await caches.match("./index.html")) ||
+                 (await caches.match("./"));
+        })
     );
-  } else {
-    event.respondWith(
-      fetch(request).then(response => {
-        if (response && (response.ok || response.type === 'opaque')) {
+    return;
+  }
+
+  event.respondWith(
+    fetch(request)
+      .then((response) => {
+        if (response && response.ok) {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache =>
-            cache.put(request, copy)
-          );
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
         }
         return response;
-      }).catch(() => caches.match(request))
-    );
-  }
+      })
+      .catch(async () => {
+        const cached = await caches.match(request);
+        if (cached) return cached;
+        return new Response("You are offline and this resource is not cached.", {
+          status: 503,
+          statusText: "Offline"
+        });
+      })
+  );
 });
