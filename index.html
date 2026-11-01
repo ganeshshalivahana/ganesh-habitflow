@@ -12,44 +12,133 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HabitFlow">
 <meta name="theme-color" content="#10b981">
-<link rel="manifest" href="./manifest.webmanifest">
+<link rel="manifest" href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22Ganesh's%20HabitFlow%22%2C%22short_name%22%3A%22HabitFlow%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%2310b981%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Butf8%2C%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Crect%20width%3D'100'%20height%3D'100'%20rx%3D'20'%20fill%3D'%2310b981'%2F%3E%3Ctext%20x%3D'50'%20y%3D'65'%20font-size%3D'50'%20text-anchor%3D'middle'%20fill%3D'%23022c22'%3E%E2%9C%A6%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --accent: #10b981;
   --accent2: #059669;
-  --bg: #f8fafc;
-  --panel: #ffffff;
+  --bg: #eef2f6;
+  --bg-gradient: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.16) 0px, transparent 50%),
+                 radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                 radial-gradient(at 50% 50%, rgba(14, 165, 233, 0.12) 0px, transparent 50%),
+                 radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.12) 0px, transparent 50%),
+                 radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.14) 0px, transparent 50%),
+                 #eef2f6;
+  --panel: rgba(255, 255, 255, 0.76);
+  --card: rgba(255, 255, 255, 0.65);
+  --glass-subtle: rgba(255, 255, 255, 0.46);
+  --glass-elevated: rgba(255, 255, 255, 0.88);
   --ink: #0f172a;
   --muted: #64748b;
-  --line: #e2e8f0;
-  --glow: rgba(16, 185, 129, 0.15);
-}
-* { box-sizing: border-box; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  transition: background 0.25s ease, color 0.25s ease;
-  overflow-x: hidden;
-}
-body.dark {
-  --bg: #090e17;
-  --panel: #111927;
-  --ink: #f1f5f9;
-  --muted: #94a3b8;
-  --line: #1e293b;
-  --glow: rgba(16, 185, 129, 0.25);
-  background: var(--bg);
-  color: var(--ink);
+  --line: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-border-subtle: rgba(255, 255, 255, 0.35);
+  --glow: rgba(16, 185, 129, 0.2);
+  --glass-shadow: 0 10px 32px 0 rgba(31, 38, 135, 0.07);
+  --glass-inset: inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+  --glass-blur: blur(20px);
 }
 
-/* Hero card with smooth gradient & background image */
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--bg);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  color: var(--ink);
+  transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Ambient Floating Luminous Aurora Orbs for authentic glass refraction */
+body::before {
+  content: '';
+  position: fixed;
+  top: -12vw;
+  right: -8vw;
+  width: 55vw;
+  height: 55vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  opacity: 0.18;
+  filter: blur(85px);
+  pointer-events: none;
+  z-index: 0;
+  animation: floatOrb 20s ease-in-out infinite alternate;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -10vw;
+  left: -8vw;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+  opacity: 0.16;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  animation: floatOrb 24s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(35px, 45px) scale(1.08); }
+  100% { transform: translate(-25px, 20px) scale(0.95); }
+}
+
+body.dark {
+  --bg: #090e17;
+  --bg-gradient: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.22) 0px, transparent 55%),
+                 radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.22) 0px, transparent 50%),
+                 radial-gradient(at 50% 50%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
+                 radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.16) 0px, transparent 50%),
+                 radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.18) 0px, transparent 50%),
+                 #090e17;
+  --panel: rgba(17, 25, 40, 0.78);
+  --card: rgba(17, 25, 40, 0.68);
+  --glass-subtle: rgba(17, 25, 40, 0.48);
+  --glass-elevated: rgba(22, 33, 52, 0.9);
+  --ink: #f8fafc;
+  --muted: #94a3b8;
+  --line: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.13);
+  --glass-border-subtle: rgba(255, 255, 255, 0.07);
+  --glow: rgba(16, 185, 129, 0.25);
+  --glass-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.4);
+  --glass-inset: inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Content container above background orbs */
+#app {
+  position: relative;
+  z-index: 1;
+}
+
+/* Frosted Glass Panels */
+.panel {
+  background: var(--panel);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  box-shadow: var(--glass-shadow), var(--glass-inset);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Hero card with Glass Sheen */
 .welcome-hero {
   position: relative;
   min-height: 250px;
-  border-radius: 24px;
+  border-radius: 26px;
   overflow: hidden;
   background-size: cover;
   background-position: center 34%;
@@ -57,7 +146,15 @@ body.dark {
   align-items: center;
   padding: 34px 38px;
   color: #ffffff;
-  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+.welcome-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+  pointer-events: none;
 }
 .welcome-copy {
   position: relative;
@@ -84,7 +181,7 @@ body.dark {
 }
 .welcome-copy p {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.92);
   margin-top: 12px;
   line-height: 1.5;
 }
@@ -98,204 +195,270 @@ body.dark {
   font-weight: 800;
   color: #fff;
   background: rgba(15, 23, 42, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 8px 14px;
   border-radius: 9999px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 @media (max-width: 640px) {
   .welcome-hero { min-height: 220px; padding: 24px 20px; }
   .welcome-tag { display: none; }
 }
 
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.035);
-}
 .muted { color: var(--muted); }
 .accent { color: var(--accent); }
+
+/* Glass Buttons */
 .btn {
-  border-radius: 12px;
-  padding: 9px 15px;
+  border-radius: 14px;
+  padding: 9px 16px;
   font-weight: 700;
   font-size: 13px;
-  transition: all 0.18s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   cursor: pointer;
   border: none;
+  touch-action: manipulation;
 }
 .btn-primary {
-  background: var(--accent);
-  color: #03251d;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #022c22;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 18px var(--glow), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
 }
 .btn-primary:hover {
   filter: brightness(1.06);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px var(--glow);
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 25px var(--glow), inset 0 1px 1px rgba(255, 255, 255, 0.7);
 }
 .btn-soft {
-  background: rgba(148, 163, 184, 0.12);
+  background: var(--glass-subtle);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
   color: var(--ink);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03), var(--glass-inset);
 }
 .btn-soft:hover {
-  background: rgba(148, 163, 184, 0.2);
+  background: var(--panel);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px var(--glow), var(--glass-inset);
 }
 .btn-danger {
-  background: rgba(239, 68, 68, 0.12);
+  background: rgba(239, 68, 68, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(239, 68, 68, 0.3);
   color: #ef4444;
+  box-shadow: var(--glass-inset);
 }
 .btn-danger:hover {
-  background: rgba(239, 68, 68, 0.22);
+  background: rgba(239, 68, 68, 0.24);
+  transform: translateY(-1px);
 }
+
+/* Glass Inputs, Selects & Textareas */
 input, select, textarea {
-  background: var(--panel);
+  background: var(--glass-subtle);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
   padding: 10px 14px;
   outline: none;
   width: 100%;
   font-size: 13px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04), var(--glass-inset);
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
 }
 input:focus, select:focus, textarea:focus {
+  background: var(--panel);
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--glow);
+  box-shadow: 0 0 0 3px var(--glow), inset 0 1px 2px rgba(0, 0, 0, 0.04);
 }
+
+/* Glass Sidebar Nav Items */
 .nav-item {
   width: 100%;
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 11px 14px;
-  border-radius: 13px;
+  border-radius: 14px;
   text-align: left;
   color: var(--muted);
   font-size: 13.5px;
   font-weight: 700;
-  border: none;
+  border: 1px solid transparent;
   background: transparent;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.nav-item.active, .nav-item:hover {
-  background: rgba(16, 185, 129, 0.12);
+.nav-item:hover {
+  background: var(--glass-subtle);
+  border-color: var(--glass-border-subtle);
   color: var(--accent);
+  transform: translateX(2px);
 }
+.nav-item.active {
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--accent);
+  box-shadow: 0 4px 14px var(--glow), var(--glass-inset);
+}
+
 .stat {
   font-family: 'Manrope', sans-serif;
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -1px;
 }
+
+/* Glass Habit Rows */
 .habit-row {
-  border: 1px solid var(--line);
-  border-radius: 16px;
+  background: var(--glass-subtle);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
   padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 14px;
-  transition: transform 0.15s, border-color 0.15s;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02), var(--glass-inset);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 .habit-row:hover {
-  border-color: rgba(16, 185, 129, 0.35);
+  background: var(--panel);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px var(--glow), var(--glass-inset);
+  transform: translateY(-1.5px);
 }
+
 .check-btn {
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  border: 2px solid #cbd5e1;
-  border-radius: 8px;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border: 2px solid rgba(203, 213, 225, 0.8);
+  border-radius: 9px;
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: all 0.15s;
-  background: transparent;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  background: var(--glass-subtle);
+  backdrop-filter: blur(8px);
   color: transparent;
   font-size: 13px;
   font-weight: 900;
+  box-shadow: var(--glass-inset);
+}
+body.dark .check-btn {
+  border-color: rgba(255, 255, 255, 0.25);
 }
 .check-btn.done {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
   border-color: var(--accent);
   color: #032b21;
+  box-shadow: 0 4px 14px var(--glow), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
 }
+
+/* Glass Pills & Chips */
 .pill {
   font-size: 11px;
   font-weight: 800;
-  padding: 4px 9px;
+  padding: 4px 10px;
   border-radius: 9999px;
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(16, 185, 129, 0.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(16, 185, 129, 0.3);
   color: var(--accent);
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  box-shadow: var(--glass-inset);
 }
 .pill-gray {
-  background: rgba(148, 163, 184, 0.14);
+  background: var(--glass-subtle);
+  border: 1px solid var(--glass-border-subtle);
   color: var(--muted);
 }
 .pill-amber {
-  background: rgba(245, 158, 11, 0.14);
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
   color: #f59e0b;
 }
+
 .progress {
   height: 8px;
-  background: rgba(148, 163, 184, 0.2);
+  background: var(--glass-subtle);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--glass-border-subtle);
   border-radius: 9999px;
   overflow: hidden;
 }
 .progress > span {
   display: block;
   height: 100%;
-  background: var(--accent);
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
   border-radius: 9999px;
   transition: width 0.35s ease;
+  box-shadow: 0 0 10px var(--glow);
 }
+
 .page { display: none; }
-.page.active { display: block; animation: fadeIn 0.2s ease forwards; }
+.page.active { display: block; animation: fadeIn 0.22s ease forwards; }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 .toast {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: #0f172a;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   color: #ffffff;
   padding: 12px 18px;
-  border-radius: 14px;
+  border-radius: 16px;
   z-index: 100;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
   font-size: 13px;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .theme-swatch {
   width: 26px;
   height: 26px;
   border-radius: 50%;
   border: 2px solid white;
-  box-shadow: 0 0 0 1px #94a3b8;
+  box-shadow: 0 0 0 1px var(--glass-border), 0 3px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  transition: transform 0.15s;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .theme-swatch:hover {
-  transform: scale(1.15);
+  transform: scale(1.2);
 }
 
-/* In-page Modal */
+/* Glass Modal Overlay & Box */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(6px);
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 90;
   display: flex;
   align-items: center;
@@ -303,13 +466,30 @@ input:focus, select:focus, textarea:focus {
   padding: 18px;
 }
 .modal-box {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 22px;
+  background: var(--glass-elevated);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-radius: 26px;
   max-width: 520px;
   width: 100%;
   padding: 26px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35), var(--glass-inset);
+  animation: modalScale 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalScale {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Nested Containers Glass Harmonization */
+[style*="background: var(--bg)"],
+[style*="background: var(--card)"] {
+  background: var(--glass-subtle) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-color: var(--glass-border) !important;
+  box-shadow: var(--glass-inset);
 }
 
 /* 365-Day Contribution Heatmap */
@@ -327,15 +507,17 @@ input:focus, select:focus, textarea:focus {
 .heatmap-cell {
   width: 13px;
   height: 13px;
-  border-radius: 3px;
-  background: var(--line);
+  border-radius: 3.5px;
+  background: var(--glass-subtle);
+  border: 1px solid var(--glass-border-subtle);
   cursor: pointer;
-  transition: transform 0.1s, filter 0.1s;
+  transition: transform 0.12s, filter 0.12s;
 }
 .heatmap-cell:hover {
-  transform: scale(1.4);
+  transform: scale(1.45);
   z-index: 10;
-  filter: brightness(1.2);
+  filter: brightness(1.25);
+  box-shadow: 0 2px 8px var(--glow);
 }
 
 /* Particle Confetti Canvas */
@@ -363,6 +545,11 @@ input:focus, select:focus, textarea:focus {
     left: 0;
     overflow-y: auto;
     z-index: 40;
+    background: var(--panel) !important;
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border-right: 1px solid var(--glass-border);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.04);
   }
   .main {
     margin-left: 260px !important;
@@ -391,7 +578,7 @@ input:focus, select:focus, textarea:focus {
     margin-left: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
-    padding: 16px 14px 115px 14px !important; /* Bottom clearance for dock */
+    padding: 16px 14px 115px 14px !important;
   }
   .welcome-hero { min-height: 200px; padding: 22px 18px; }
   .welcome-hero h2 { font-size: 22px !important; line-height: 1.25 !important; }
@@ -401,7 +588,7 @@ input:focus, select:focus, textarea:focus {
   header.flex h1 { font-size: 22px !important; }
 }
 
-/* Mobile Top Sticky Bar */
+/* Mobile Top Sticky Bar - Frosted Glass */
 #mobile-topbar {
   display: none;
   position: sticky;
@@ -410,13 +597,14 @@ input:focus, select:focus, textarea:focus {
   right: 0;
   height: 56px;
   z-index: 40;
-  background: var(--panel);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--glass-elevated) !important;
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* Mobile Bottom Navigation Dock */
+/* Mobile Bottom Navigation Dock - Frosted Glass Floating Bar */
 #mobile-bottom-nav {
   display: none;
   position: fixed;
@@ -424,11 +612,11 @@ input:focus, select:focus, textarea:focus {
   left: 0;
   right: 0;
   z-index: 50;
-  background: var(--panel);
-  border-top: 1px solid var(--line);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.08);
+  background: var(--glass-elevated) !important;
+  border-top: 1px solid var(--glass-border);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.4);
   padding: 6px 6px max(6px, env(safe-area-inset-bottom, 8px));
   justify-content: space-around;
   align-items: center;
@@ -441,8 +629,8 @@ input:focus, select:focus, textarea:focus {
   justify-content: center;
   gap: 3px;
   padding: 6px 8px;
-  border-radius: 12px;
-  border: none;
+  border-radius: 14px;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--muted);
   font-size: 11px;
@@ -451,13 +639,15 @@ input:focus, select:focus, textarea:focus {
   flex: 1;
   max-width: 72px;
   min-height: 50px;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 .mobile-nav-btn.active {
   color: var(--accent);
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 2px 10px var(--glow), var(--glass-inset);
 }
 .mobile-nav-btn .icon {
   font-size: 19px;
@@ -470,8 +660,8 @@ input:focus, select:focus, textarea:focus {
   inset: 0;
   z-index: 60;
   background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: opacity 0.25s ease;
 }
 #mobile-drawer {
@@ -482,10 +672,12 @@ input:focus, select:focus, textarea:focus {
   z-index: 61;
   max-height: 85vh;
   padding: 14px 16px max(24px, env(safe-area-inset-bottom, 24px)) 16px;
-  border-top: 1px solid var(--line);
-  border-radius: 26px 26px 0 0;
-  background: var(--panel);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+  border-top: 1px solid var(--glass-border);
+  border-radius: 28px 28px 0 0;
+  background: var(--glass-elevated) !important;
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
@@ -504,23 +696,27 @@ input:focus, select:focus, textarea:focus {
   align-items: center;
   gap: 10px;
   padding: 11px 12px;
-  border-radius: 14px;
-  border: 1px solid var(--line);
-  background: var(--bg);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-subtle);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: var(--ink);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   text-align: left;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
   width: 100%;
   box-sizing: border-box;
   min-width: 0;
+  box-shadow: var(--glass-inset);
 }
 .drawer-item:hover, .drawer-item:active {
   border-color: var(--accent);
-  background: rgba(16, 185, 129, 0.08);
+  background: var(--panel);
   color: var(--accent);
+  transform: translateY(-1px);
 }
 
 /* Keyboard Shortcut Hint Pills */
@@ -529,16 +725,22 @@ input:focus, select:focus, textarea:focus {
   font-size: 10.5px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   padding: 2px 6px;
-  border-radius: 5px;
-  background: rgba(0, 0, 0, 0.06);
-  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--glass-subtle);
+  border: 1px solid var(--glass-border-subtle);
   color: var(--muted);
   font-weight: 700;
   line-height: 1;
   margin-left: auto;
 }
-body.dark .kbd-hint {
-  background: rgba(255, 255, 255, 0.08);
+
+/* Floating In-App Push Notification Banner - Frosted Glass */
+#in-app-notif-banner {
+  background: var(--glass-elevated) !important;
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 /* Smooth Touch and Wrap Enhancements */
@@ -562,13 +764,33 @@ body.dark .kbd-hint {
 <body>
 <canvas id="confetti-canvas"></canvas>
 
+<!-- Floating In-App Push Notification Banner (Top of screen) -->
+<div id="in-app-notif-banner" class="fixed top-3 left-1/2 -translate-x-1/2 w-[92%] max-w-md p-3.5 rounded-2xl shadow-2xl border flex items-center justify-between gap-3 z-50 transition-all duration-300 -translate-y-28 opacity-0 pointer-events-none" style="background: var(--card); border-color: var(--accent);">
+  <div class="flex items-center gap-3 min-w-0">
+    <div class="w-10 h-10 rounded-xl grid place-items-center text-lg font-bold shrink-0 shadow-sm" style="background: var(--accent); color: #022c22">🔔</div>
+    <div class="min-w-0">
+      <div class="font-extrabold text-xs leading-tight truncate" id="in-app-notif-title">Habit Reminder</div>
+      <div class="text-[11px] muted leading-tight mt-0.5 truncate" id="in-app-notif-body">Time to check off your scheduled habit!</div>
+    </div>
+  </div>
+  <div class="flex items-center gap-1.5 shrink-0">
+    <button id="in-app-notif-action" class="btn btn-primary text-xs py-1 px-2.5 font-bold">View</button>
+    <button id="in-app-notif-dismiss" class="w-7 h-7 rounded-full border grid place-items-center text-xs font-bold muted hover:text-white" style="border-color: var(--line)">✕</button>
+  </div>
+</div>
+
 <!-- Mobile Sticky Header (< 1024px) -->
 <header id="mobile-topbar" class="mobile-only fixed top-0 left-0 right-0 h-14 px-3 flex items-center justify-between z-40 border-b">
   <div class="flex items-center gap-2 min-w-0">
-    <div class="w-8 h-8 rounded-xl grid place-items-center text-sm font-bold shadow-sm shrink-0" style="background: var(--accent); color: #022c22">✦</div>
-    <div class="min-w-0">
+    <!-- Mobile Back Button (Visible on secondary spaces) -->
+    <button id="mobile-back-btn" class="hidden h-8 px-2.5 rounded-xl border flex items-center gap-1 text-xs font-extrabold shadow-sm shrink-0 transition-all text-slate-800 dark:text-slate-100" style="border-color: var(--line); background: var(--bg)" title="Go back to previous page" aria-label="Go back">
+      <span class="text-sm font-bold">←</span>
+      <span>Back</span>
+    </button>
+    <div id="mobile-brand-icon" class="w-8 h-8 rounded-xl grid place-items-center text-sm font-bold shadow-sm shrink-0" style="background: var(--accent); color: #022c22">✦</div>
+    <div class="min-w-0" id="mobile-brand-meta">
       <div class="flex items-center gap-1.5">
-        <span class="font-extrabold text-sm tracking-tight leading-tight" style="font-family: 'Manrope', sans-serif">HabitFlow</span>
+        <span class="font-extrabold text-sm tracking-tight leading-tight" style="font-family: 'Manrope', sans-serif" id="mobile-title-text">HabitFlow</span>
         <span id="mobile-level-pill" class="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" style="background: rgba(16, 185, 129, 0.15); color: var(--accent)">Lvl 1</span>
       </div>
       <div class="text-[10px] muted truncate" id="mobile-subtitle">Ganesh's Futures Engine</div>
@@ -581,8 +803,8 @@ body.dark .kbd-hint {
     <button id="mobile-install-top-btn" class="install-app-btn h-8 px-2 rounded-lg text-xs font-bold flex items-center gap-1 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 shadow-sm" title="Install App to Home Screen">
       <span>📲</span><span class="text-[11px]">Install</span>
     </button>
+    <button id="mobile-settings-top-btn" class="w-8 h-8 rounded-lg border grid place-items-center text-xs font-bold text-slate-700 dark:text-slate-200" style="border-color: var(--line); background: var(--bg)" title="Open Settings" aria-label="Open Settings">⚙</button>
     <button id="mobile-sound-toggle" class="w-8 h-8 rounded-lg border grid place-items-center text-xs font-bold" style="border-color: var(--line); background: var(--bg)" title="Toggle sound">🔊</button>
-    <button id="mobile-theme-toggle" class="w-8 h-8 rounded-lg border grid place-items-center text-xs font-bold" style="border-color: var(--line); background: var(--bg)" title="Toggle theme">☾</button>
     <button id="mobile-quick-add" class="h-8 px-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm" style="background: var(--accent); color: #022c22">＋</button>
   </div>
 </header>
@@ -657,6 +879,11 @@ body.dark .kbd-hint {
     <!-- Global Header -->
     <header class="flex flex-wrap justify-between items-center gap-4 mb-7">
       <div>
+        <!-- Desktop Back Button -->
+        <button id="desktop-back-btn" class="hidden btn btn-soft text-xs items-center gap-1.5 font-bold mb-3 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all" title="Return to previous page">
+          <span class="text-sm font-bold">←</span>
+          <span id="desktop-back-label">Back to Today</span>
+        </button>
         <p class="text-xs font-bold uppercase tracking-widest muted flex items-center gap-2" id="today-label">
           TODAY'S SPACE
         </p>
@@ -671,6 +898,10 @@ body.dark .kbd-hint {
         <button class="btn btn-soft text-xs" id="desktop-sync-btn" title="Phone & Laptop Auto-Sync Status">
           <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1 animate-pulse" id="desktop-sync-dot"></span>
           <span id="desktop-sync-text">Auto-Sync: Live</span>
+        </button>
+        <!-- Settings Quick Access Button -->
+        <button class="btn btn-soft text-xs flex items-center gap-1 font-bold" id="desktop-settings-btn" title="Open Settings & Customization">
+          <span>⚙️</span><span>Settings</span>
         </button>
         <!-- Audio Mute / Unmute Toggle -->
         <button class="btn btn-soft" id="sound-toggle" title="Toggle audio feedback">
@@ -732,7 +963,10 @@ body.dark .kbd-hint {
               <h2 class="font-extrabold text-lg">Today's Habits &amp; Targets</h2>
               <p class="text-xs muted">Click checkbox or use numeric steppers to record completions.</p>
             </div>
-            <button class="btn btn-soft text-xs" data-goto="habits">View All Studio →</button>
+            <div class="flex items-center gap-2">
+              <button class="btn btn-primary text-xs font-bold" id="dash-quick-add-btn">＋ New Habit</button>
+              <button class="btn btn-soft text-xs" data-goto="habits">View All Studio →</button>
+            </div>
           </div>
 
           <!-- Habit List -->
@@ -1390,19 +1624,234 @@ body.dark .kbd-hint {
       </div>
     </section>
 
-    <!-- ================= PAGE 11: SETTINGS & BACKUP ================= -->
+        <!-- ================= PAGE 11: SETTINGS & SYSTEM CONTROL ================= -->
     <section class="page" id="page-settings">
-      <div class="grid lg:grid-cols-2 gap-6">
-        <!-- Appearance & Preferences -->
-        <div class="panel p-6 space-y-5">
+      <!-- Top Back Navigation Action inside Settings -->
+      <div class="mb-4 flex items-center justify-between">
+        <button class="btn btn-soft text-xs flex items-center gap-1.5 font-extrabold page-back-action shadow-sm" title="Back to previous page">
+          <span class="text-sm font-bold">←</span>
+          <span>Back to Dashboard</span>
+        </button>
+        <span class="text-xs muted">Ganesh's HabitFlow Settings</span>
+      </div>
+
+      <!-- Settings Header Banner with Quick Status Pills -->
+      <div class="panel p-6 mb-6 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(99, 102, 241, 0.08));">
+        <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 class="font-extrabold text-lg">Appearance &amp; Sound</h2>
-            <p class="text-xs muted mt-0.5">Customize your workspace colors, lighting, and sound effects.</p>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">⚙️</span>
+              <h2 class="text-xl font-extrabold tracking-tight" style="font-family: 'Manrope', sans-serif">Settings &amp; System Control</h2>
+            </div>
+            <p class="text-xs muted mt-1">Configure your profile, mobile notifications, sync vault, soundscapes, and data ownership from one place.</p>
+          </div>
+          <!-- Quick Status Badges -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="badge-notif-status" class="px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span> Notifications: Checking...
+            </span>
+            <span id="badge-sync-status" class="px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Auto-Sync: Active
+            </span>
+            <span id="badge-storage-status" class="px-2.5 py-1 rounded-full text-xs font-bold border border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
+              💾 Local Vault: 0 KB
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6">
+
+        <!-- Card 1: 🔔 Mobile & Phone Notification Center (Prominently placed at top left!) -->
+        <div class="panel p-6 space-y-5 border-2 border-emerald-500/30 shadow-md" style="background: var(--card)">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-lg">🔔</span>
+                <h3 class="font-extrabold text-base">Mobile &amp; Browser Notification Center</h3>
+              </div>
+              <p class="text-xs muted mt-0.5">Real-time alerts, daily routines, and vibration on your phone &amp; laptop.</p>
+            </div>
+            <span id="notif-permission-pill" class="text-[11px] font-bold px-2 py-0.5 rounded-full border">Permission: Default</span>
+          </div>
+
+          <!-- Master Notification Toggle and Test Button -->
+          <div class="p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-between gap-3" style="background: var(--bg); border-color: var(--line)">
+            <div>
+              <div class="font-bold text-sm">Push Notifications</div>
+              <p class="text-xs muted mt-0.5" id="notif-status-desc">Allow notifications so your phone alerts you for your daily routines.</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+              <button class="btn btn-primary text-xs flex-1 sm:flex-none" id="enable-notifications">
+                🔔 Enable Notifications
+              </button>
+              <button class="btn btn-soft text-xs flex-1 sm:flex-none font-bold" id="test-mobile-notif-btn" title="Sends an immediate alert with sound & vibration">
+                ⚡ Test On My Phone
+              </button>
+            </div>
+          </div>
+
+          <!-- Mobile Haptic Vibration & Chime Settings -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="p-3 rounded-xl border flex items-center justify-between cursor-pointer" style="border-color: var(--line); background: var(--bg)">
+              <div>
+                <div class="text-xs font-bold">📳 Phone Vibration</div>
+                <div class="text-[10px] muted">Haptic pulse on alert</div>
+              </div>
+              <input type="checkbox" id="setting-vibration-toggle" class="w-4 h-4 accent-emerald-500" checked>
+            </label>
+            <label class="p-3 rounded-xl border flex items-center justify-between cursor-pointer" style="border-color: var(--line); background: var(--bg)">
+              <div>
+                <div class="text-xs font-bold">🎵 Chime Sound</div>
+                <div class="text-[10px] muted">Audible chime on alert</div>
+              </div>
+              <input type="checkbox" id="setting-notif-sound-toggle" class="w-4 h-4 accent-emerald-500" checked>
+            </label>
+          </div>
+
+          <!-- Scheduled Daily Routine Reminders -->
+          <div class="border-t pt-4 space-y-3" style="border-color: var(--line)">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-xs uppercase tracking-wider muted">SCHEDULED DAILY ROUTINE REMINDERS</h4>
+              <span class="text-[10px] muted">Triggered automatically</span>
+            </div>
+
+            <!-- Morning Routine -->
+            <div class="p-3 rounded-xl border flex items-center justify-between gap-3" style="border-color: var(--line); background: var(--bg)">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="text-lg">🌅</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold truncate">Morning Routine Kickstart</div>
+                  <div class="text-[10px] muted truncate">Set intention &amp; review morning habits</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <input type="time" id="setting-morning-time" value="08:00" class="input py-1 px-2 text-xs w-24">
+                <input type="checkbox" id="setting-morning-enabled" class="w-4 h-4 accent-emerald-500" checked>
+              </div>
+            </div>
+
+            <!-- Afternoon Routine -->
+            <div class="p-3 rounded-xl border flex items-center justify-between gap-3" style="border-color: var(--line); background: var(--bg)">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="text-lg">☀️</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold truncate">Mid-Day Momentum Check</div>
+                  <div class="text-[10px] muted truncate">Water, movement, and habit check-in</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <input type="time" id="setting-afternoon-time" value="13:30" class="input py-1 px-2 text-xs w-24">
+                <input type="checkbox" id="setting-afternoon-enabled" class="w-4 h-4 accent-emerald-500" checked>
+              </div>
+            </div>
+
+            <!-- Evening Routine -->
+            <div class="p-3 rounded-xl border flex items-center justify-between gap-3" style="border-color: var(--line); background: var(--bg)">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="text-lg">🌙</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold truncate">Evening Reflection &amp; Streak Saver</div>
+                  <div class="text-[10px] muted truncate">Log evening habits before midnight</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <input type="time" id="setting-evening-time" value="21:00" class="input py-1 px-2 text-xs w-24">
+                <input type="checkbox" id="setting-evening-enabled" class="w-4 h-4 accent-emerald-500" checked>
+              </div>
+            </div>
+
+            <!-- Habit-Specific Reminder Toggle -->
+            <label class="p-3 rounded-xl border flex items-center justify-between cursor-pointer" style="border-color: var(--line); background: var(--bg)">
+              <div>
+                <div class="text-xs font-bold">☑️ Individual Habit Reminders</div>
+                <div class="text-[10px] muted">Notify at the exact reminder time configured inside each habit</div>
+              </div>
+              <input type="checkbox" id="setting-habit-reminders-toggle" class="w-4 h-4 accent-emerald-500" checked>
+            </label>
+          </div>
+
+          <!-- Android Mobile Chrome Notification Instructions Accordion -->
+          <details class="p-3 rounded-xl border text-xs" style="border-color: var(--line); background: var(--bg)">
+            <summary class="font-bold cursor-pointer text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+              <span>📱</span> <span>How to make sure notifications show on Android / Chrome</span>
+            </summary>
+            <div class="mt-2.5 space-y-1.5 text-muted leading-relaxed text-[11px]">
+              <p>1. In Google Chrome on your phone, tap the <strong>lock icon 🔒 or site settings</strong> next to the web address.</p>
+              <p>2. Tap <strong>Permissions → Notifications</strong> and select <strong>Allow</strong>.</p>
+              <p>3. If still blocked, go to your phone's <strong>Android Settings → Apps → Chrome → Notifications</strong> and ensure app notifications are ON.</p>
+              <p>4. Tap the <strong>"Test On My Phone"</strong> button above to confirm instant vibration &amp; chime!</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Card 2: 👤 User Identity & Profile Customization -->
+        <div class="panel p-6 space-y-5" style="background: var(--card)">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-lg">👤</span>
+              <h3 class="font-extrabold text-base">User Profile &amp; Customization</h3>
+            </div>
+            <p class="text-xs muted mt-0.5">Customize your greeting, persona, targets, and display rules.</p>
+          </div>
+
+          <div class="space-y-3.5">
+            <div>
+              <label class="text-xs font-bold muted block mb-1">YOUR DISPLAY NAME</label>
+              <input type="text" id="setting-user-name" class="input w-full" value="Ganesh" placeholder="Enter your name">
+              <p class="text-[10px] muted mt-1">Updates greeting header, reports, and time capsules across the app.</p>
+            </div>
+
+            <div>
+              <label class="text-xs font-bold muted block mb-1">PERSONAL MANTRA / DAILY MOTTO</label>
+              <input type="text" id="setting-user-motto" class="input w-full" value="Small continuous actions compound into extraordinary futures." placeholder="Your personal quote">
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-xs font-bold muted">DAILY HABIT TARGET COMPLETION</label>
+                <span class="text-xs font-bold text-emerald-500" id="setting-target-label">80%</span>
+              </div>
+              <input type="range" id="setting-target-slider" min="50" max="100" step="5" value="80" class="w-full accent-emerald-500">
+              <p class="text-[10px] muted mt-1">Target consistency rate required to earn full daily streak points.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-1">
+              <div>
+                <label class="text-xs font-bold muted block mb-1">TIME FORMAT</label>
+                <select id="setting-time-format" class="input w-full text-xs">
+                  <option value="12h">12-Hour (07:30 AM)</option>
+                  <option value="24h">24-Hour (19:30)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-bold muted block mb-1">FIRST DAY OF WEEK</label>
+                <select id="setting-week-start" class="input w-full text-xs">
+                  <option value="monday">Monday (Productivity standard)</option>
+                  <option value="sunday">Sunday</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn btn-primary w-full text-xs font-bold" id="save-profile-btn">
+              💾 Save Profile &amp; Preferences
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: 🎨 Appearance, Themes & Lighting -->
+        <div class="panel p-6 space-y-5" style="background: var(--card)">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🎨</span>
+              <h3 class="font-extrabold text-base">Appearance &amp; Theme Styling</h3>
+            </div>
+            <p class="text-xs muted mt-0.5">Customize your color palette, dark mode, and visual ergonomics.</p>
           </div>
 
           <div>
             <label class="text-xs font-bold muted block mb-2">ACCENT THEME PALETTE</label>
-            <div class="flex gap-4 items-center">
+            <div class="flex gap-4 items-center flex-wrap">
               <button class="theme-swatch" style="background: #10b981" data-color="#10b981" aria-label="Emerald Green"></button>
               <button class="theme-swatch" style="background: #6366f1" data-color="#6366f1" aria-label="Indigo"></button>
               <button class="theme-swatch" style="background: #f97316" data-color="#f97316" aria-label="Sunset Orange"></button>
@@ -1413,62 +1862,161 @@ body.dark .kbd-hint {
           </div>
 
           <div class="flex gap-2">
-            <button class="btn btn-soft" id="theme-light">☀️ Light Mode</button>
-            <button class="btn btn-soft" id="theme-dark">🌙 Dark Mode</button>
+            <button class="btn btn-soft flex-1" id="theme-light">☀️ Light Mode</button>
+            <button class="btn btn-soft flex-1" id="theme-dark">🌙 Dark Mode</button>
+            <button class="btn btn-soft flex-1" id="theme-auto">🌓 System Auto</button>
           </div>
 
-          <!-- Audio Feedback Toggle -->
-          <div class="border-t pt-4" style="border-color: var(--line)">
-            <h3 class="font-bold text-sm">Chime Feedback</h3>
-            <p class="text-xs muted mt-1 mb-3">Plays a gentle harmonic chime whenever you complete a habit or finish a focus session.</p>
-            <div class="flex gap-2">
-              <button class="btn btn-soft text-xs" id="test-chime-btn">🔔 Test Audio Chime</button>
+          <div class="border-t pt-4 space-y-3" style="border-color: var(--line)">
+            <h4 class="font-bold text-xs uppercase tracking-wider muted">SOUNDSCAPES &amp; AUDIO FEEDBACK</h4>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold">Completion Harmonic Chime</div>
+                <div class="text-[10px] muted">Plays gentle chords on habit completion</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="btn btn-soft text-xs" id="test-chime-btn">🔔 Test Chime</button>
+                <button class="btn btn-soft text-xs" id="settings-sound-toggle">🔊 Sound: On</button>
+              </div>
             </div>
-          </div>
-
-          <!-- Notification settings -->
-          <div class="border-t pt-4" style="border-color: var(--line)">
-            <h3 class="font-bold text-sm">Browser Reminders</h3>
-            <p class="text-xs muted mt-1 mb-3">Allow notifications so you never forget your scheduled morning, afternoon, or evening routines.</p>
-            <button class="btn btn-primary text-xs" id="enable-notifications">Request Notification Permission</button>
-            <p class="text-xs muted mt-2" id="notification-status">Permission not requested yet.</p>
           </div>
         </div>
 
-        <!-- Data Backup & Export Studio -->
-        <div class="panel p-6 space-y-4">
+        <!-- Card 4: 🔄 Cross-Device Auto-Sync (Phone & Laptop) -->
+        <div class="panel p-6 space-y-5" style="background: var(--card)">
           <div>
-            <h2 class="font-extrabold text-lg">Data Ownership &amp; Backups</h2>
-            <p class="text-xs muted mt-0.5">All your habits, streaks, and reflections live locally in your browser storage.</p>
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🔄</span>
+              <h3 class="font-extrabold text-base">Phone &amp; Laptop Auto-Sync Vault</h3>
+            </div>
+            <p class="text-xs muted mt-0.5">Manage real-time cloud pairing and sync room settings.</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl border flex items-center justify-between gap-3" style="border-color: var(--line); background: var(--bg)">
+            <div class="min-w-0">
+              <div class="text-xs font-bold muted">CURRENT SYNC ROOM CODE</div>
+              <div class="font-mono text-sm font-extrabold text-emerald-600 dark:text-emerald-400 truncate" id="setting-room-code-display">HABIT-VAULT</div>
+            </div>
+            <button class="btn btn-soft text-xs" id="setting-open-sync-modal-btn">
+              ⚡ Open Sync Center &amp; QR
+            </button>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="muted">Sync Frequency</span>
+              <span class="font-bold text-emerald-500">Real-time + Every 5s</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="muted">Local Tab Broadcast</span>
+              <span class="font-bold">BroadcastChannel Active</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="muted">Cloud Endpoint</span>
+              <span class="font-mono text-[11px]">kv.val.town / fallback</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 pt-1">
+            <button class="btn btn-soft text-xs flex-1" id="setting-force-push">
+              ⬆ Push Local to Cloud
+            </button>
+            <button class="btn btn-soft text-xs flex-1" id="setting-force-pull">
+              ⬇ Pull Latest Cloud
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 5: ⏱️ Quantum Focus Timer Defaults -->
+        <div class="panel p-6 space-y-5" style="background: var(--card)">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-lg">⏱️</span>
+              <h3 class="font-extrabold text-base">Focus Timer &amp; Productivity Defaults</h3>
+            </div>
+            <p class="text-xs muted mt-0.5">Set standard durations for deep work sessions and breaks.</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="text-[10px] font-bold muted block mb-1">FOCUS DURATION</label>
+              <select id="setting-focus-duration" class="input w-full text-xs">
+                <option value="15">15 min</option>
+                <option value="25" selected>25 min</option>
+                <option value="45">45 min</option>
+                <option value="60">60 min</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] font-bold muted block mb-1">SHORT BREAK</label>
+              <select id="setting-short-break" class="input w-full text-xs">
+                <option value="5" selected>5 min</option>
+                <option value="10">10 min</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] font-bold muted block mb-1">LONG BREAK</label>
+              <select id="setting-long-break" class="input w-full text-xs">
+                <option value="15" selected>15 min</option>
+                <option value="20">20 min</option>
+                <option value="30">30 min</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="p-3 rounded-xl border flex items-center justify-between cursor-pointer" style="border-color: var(--line); background: var(--bg)">
+            <div>
+              <div class="text-xs font-bold">Auto-Switch to Break</div>
+              <div class="text-[10px] muted">Automatically trigger break timer when focus completes</div>
+            </div>
+            <input type="checkbox" id="setting-auto-break" class="w-4 h-4 accent-emerald-500">
+          </label>
+        </div>
+
+        <!-- Card 6: 💾 Data Ownership, Backups & Privacy Vault -->
+        <div class="panel p-6 space-y-4" style="background: var(--card)">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-lg">💾</span>
+              <h3 class="font-extrabold text-base">Data Ownership &amp; Export Studio</h3>
+            </div>
+            <p class="text-xs muted mt-0.5">Export, restore, or reset your habits and completion records.</p>
           </div>
 
           <div class="space-y-2.5">
-            <button class="btn btn-primary w-full" id="export-json">
+            <button class="btn btn-primary w-full text-xs font-bold" id="export-json">
               📥 Download Complete JSON Backup
             </button>
 
-            <label class="btn btn-soft w-full text-center cursor-pointer block">
+            <label class="btn btn-soft w-full text-center cursor-pointer block text-xs font-bold">
               📤 Restore from JSON Backup
               <input id="import-json" type="file" accept=".json,application/json" class="hidden">
             </label>
 
-            <button class="btn btn-soft w-full" id="export-csv">
-              📊 Export All Habits &amp; Logs to CSV (Excel/Sheets)
-            </button>
+            <div class="grid grid-cols-2 gap-2">
+              <button class="btn btn-soft w-full text-xs" id="export-csv">
+                📊 Export CSV Sheet
+              </button>
+              <button class="btn btn-soft w-full text-xs" id="export-pdf">
+                ▤ Download PDF Report
+              </button>
+            </div>
 
-            <button class="btn btn-soft w-full" id="export-pdf">
-              ▤ Generate &amp; Download PDF Progress Report
-            </button>
-
-            <button class="btn btn-danger w-full mt-4" id="reset-data">
-              ⚠ Factory Reset All App Data
-            </button>
+            <div class="border-t pt-3 flex gap-2" style="border-color: var(--line)">
+              <button class="btn btn-soft text-xs flex-1 text-amber-600 dark:text-amber-400" id="clear-today-btn">
+                🧹 Clear Today's Checkmarks
+              </button>
+              <button class="btn btn-danger text-xs flex-1" id="reset-data">
+                ⚠️ Factory Reset All
+              </button>
+            </div>
           </div>
 
-          <div class="p-3 rounded-xl text-xs muted" style="background: var(--bg)">
-            Pro-tip: We recommend exporting a JSON backup weekly. This ensures you never lose your hard-earned streaks if you clear your browser cookies or cache.
+          <div class="p-3 rounded-xl text-[11px] muted" style="background: var(--bg)">
+            🔒 <strong>Local Privacy Guarantee:</strong> Your habits, notes, and completions are stored strictly in your device's browser storage and synced securely via end-to-end room codes.
           </div>
         </div>
+
       </div>
     </section>
 
@@ -1515,7 +2063,12 @@ body.dark .kbd-hint {
       <h3 class="font-extrabold text-base leading-tight" style="font-family: 'Manrope', sans-serif">Spaces &amp; Intelligence</h3>
       <p class="text-xs muted leading-tight mt-0.5">Ganesh's HabitFlow Full Toolkit</p>
     </div>
-    <button id="mobile-drawer-close" class="w-8 h-8 rounded-full border grid place-items-center font-bold text-xs shrink-0" style="border-color: var(--line)">✕</button>
+    <div class="flex items-center gap-2 shrink-0">
+      <button id="drawer-theme-toggle" class="h-8 px-2.5 rounded-xl border flex items-center gap-1 text-xs font-bold" style="border-color: var(--line); background: var(--glass-subtle)" title="Toggle Theme">
+        <span id="drawer-theme-icon">🌙</span><span class="text-[11px]">Theme</span>
+      </button>
+      <button id="mobile-drawer-close" class="w-8 h-8 rounded-full border grid place-items-center font-bold text-xs shrink-0" style="border-color: var(--line)">✕</button>
+    </div>
   </div>
 
   <!-- Phone & Laptop Auto-Sync Card in Drawer -->
@@ -1552,6 +2105,16 @@ body.dark .kbd-hint {
       <span class="text-amber-500 font-bold" id="drawer-shields">🛡️ 0 Shields</span>
     </div>
   </div>
+
+  <!-- Drawer Nav Grid: 2 columns, perfectly balanced -->
+  <!-- Featured Settings Option in Drawer -->
+  <button class="drawer-item border border-emerald-500/30 w-full flex items-center gap-3 p-3 rounded-xl text-left" data-page="settings" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(99, 102, 241, 0.08));">
+    <div class="w-9 h-9 rounded-xl grid place-items-center text-lg font-bold shrink-0 shadow-sm" style="background: var(--accent); color: #022c22">⚙️</div>
+    <div class="min-w-0">
+      <div class="font-extrabold text-xs">Settings &amp; Personalization</div>
+      <div class="text-[10px] text-emerald-600 dark:text-emerald-400">Mobile Alerts, Profile, Themes &amp; Cloud Vault</div>
+    </div>
+  </button>
 
   <!-- Drawer Nav Grid: 2 columns, perfectly balanced -->
   <div class="grid grid-cols-2 gap-2.5 w-full">
@@ -1852,6 +2415,14 @@ body.dark .kbd-hint {
 'use strict';
 
 const KEY = 'habitflow_advanced_v2';
+
+// Universal safe deep clone helper (compatible with all mobile browsers & webviews)
+function safeClone(obj) {
+  try {
+    if (typeof structuredClone === 'function') return safeClone(obj);
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(obj));
+}
 const $ = id => document.getElementById(id);
 const today = () => new Date().toLocaleDateString('en-CA');
 const shiftDate = (date, delta) => {
@@ -1948,10 +2519,44 @@ const defaultState = {
   soundFx: true,
   focusSessions: 3,
   focusTotalSeconds: 4500,
-  settings: { notifications: false }
+  profile: {
+    name: 'Ganesh',
+    motto: 'Small continuous actions compound into extraordinary futures.',
+    dailyTargetPercent: 80,
+    timeFormat: '12h',
+    weekStart: 'monday'
+  },
+  settings: {
+    notifications: false,
+    vibration: true,
+    sound: true,
+    morningReminder: { enabled: true, time: '08:00' },
+    afternoonReminder: { enabled: true, time: '13:30' },
+    eveningReminder: { enabled: true, time: '21:00' },
+    habitReminders: true,
+    focusDuration: 25,
+    shortBreak: 5,
+    longBreak: 15,
+    autoBreak: false,
+    lastNotified: {}
+  }
 };
 
-let state = load();
+let state = load(); window.state = state;
+
+// Expose public API on window for testing, extensions, and cross-frame coordination
+window.toggleHabit = toggleHabit;
+window.updateNumericHabit = updateNumericHabit;
+window.showModal = showModal;
+window.closeModal = closeModal;
+window.openModal = openModal;
+window.toggleTimer = toggleTimer;
+window.showPage = showPage;
+window.goBack = goBack;
+window.checkReminders = checkReminders;
+window.sendNotification = sendNotification;
+window.syncCloud = syncCloud;
+
 let activeMood = '🙂 Calm & Good';
 let calDate = new Date();
 let charts = {};
@@ -1968,18 +2573,19 @@ function load() {
       const v1 = localStorage.getItem('habitflow_advanced_v1');
       if (v1) {
         const parsedV1 = JSON.parse(v1);
-        return { ...structuredClone(defaultState), ...parsedV1, settings: { ...defaultState.settings, ...(parsedV1.settings || {}) } };
+        return { ...safeClone(defaultState), ...parsedV1, settings: { ...defaultState.settings, ...(parsedV1.settings || {}) } };
       }
-      return structuredClone(defaultState);
+      return safeClone(defaultState);
     }
     const parsed = JSON.parse(raw);
     return {
-      ...structuredClone(defaultState),
+      ...safeClone(defaultState),
       ...parsed,
+      profile: { ...(defaultState.profile || {}), ...(parsed.profile || {}) },
       settings: { ...defaultState.settings, ...(parsed.settings || {}) }
     };
   } catch (e) {
-    return structuredClone(defaultState);
+    return safeClone(defaultState);
   }
 }
 
@@ -2143,6 +2749,30 @@ function showModal({ title, bodyHTML, confirmText = 'Confirm', cancelText = 'Can
 function closeModal() {
   $('modal-container').classList.add('hidden');
   modalCallback = null;
+}
+
+// Global openModal wrapper (Prevents any ReferenceError from dialog calls)
+function openModal(title, bodyHTML, onConfirm, confirmText = 'Confirm', cancelText = 'Cancel') {
+  showModal({
+    title,
+    bodyHTML: (typeof bodyHTML === 'string' && !bodyHTML.trim().startsWith('<')) ? `<p class="muted">${escapeHTML(bodyHTML)}</p>` : bodyHTML,
+    confirmText,
+    cancelText,
+    onConfirm
+  });
+}
+
+// Global timer toggler for keyboard shortcuts
+function toggleTimer() {
+  if ($('timer-start')) $('timer-start').click();
+}
+
+// Cloud sync wrappers
+function pushStateToCloud() {
+  if (typeof syncCloud === 'function') syncCloud(true);
+}
+function pullStateFromCloud() {
+  if (typeof syncCloud === 'function') syncCloud(false);
 }
 
 $('modal-cancel').onclick = closeModal;
@@ -2313,7 +2943,7 @@ function renderDashboard() {
   const box = $('dash-habits');
   box.innerHTML = '';
   scheduledHabits.slice(0, 6).forEach(h => box.appendChild(createHabitRow(h, true)));
-  if (!box.children.length) {
+  if (!scheduledHabits.length) {
     box.innerHTML = '<div class="p-6 text-center muted text-sm">No habits scheduled for today. Add a new routine above!</div>';
   }
 
@@ -3655,10 +4285,14 @@ function renderGoals() {
       </div>
     `;
 
-    el.querySelector('[data-add]').onclick = () => advanceGoal(g, 1);
-    el.querySelector('[data-add5]').onclick = () => advanceGoal(g, 5);
-    el.querySelector('[data-sub]').onclick = () => advanceGoal(g, -1);
-    el.querySelector('[data-del]').onclick = () => {
+    const addBtn = el.querySelector('[data-add]');
+    if (addBtn) addBtn.onclick = () => advanceGoal(g, 1);
+    const add5Btn = el.querySelector('[data-add5]');
+    if (add5Btn) add5Btn.onclick = () => advanceGoal(g, 5);
+    const subBtn = el.querySelector('[data-sub]');
+    if (subBtn) subBtn.onclick = () => advanceGoal(g, -1);
+    const delBtn = el.querySelector('[data-del]');
+    if (delBtn) delBtn.onclick = () => {
       showModal({
         title: 'Delete Goal',
         bodyHTML: `<p class="muted">Delete goal <b>"${escapeHTML(g.title)}"</b>?</p>`,
@@ -3815,6 +4449,12 @@ function renderJournal() {
 const focusModes = document.querySelectorAll('.focus-mode');
 focusModes.forEach(b => {
   b.onclick = () => {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      if ($('timer-start')) $('timer-start').textContent = '▶ Start Focus';
+    }
+    focusModes.forEach(x => x.classList.toggle('active', x === b));
     timerInitial = Number(b.dataset.min) * 60;
     timerSeconds = timerInitial;
     updateTimer();
@@ -3862,7 +4502,15 @@ $('timer-start').onclick = () => {
       updateTimer();
       $('timer-start').textContent = '▶ Start Focus';
       $('timer-status').textContent = '🎉 Focus session finished! Take a restorative break (+25 XP).';
+      sendNotification("Focus Session Complete! 🎯", "Great deep work! Take a restorative break (+25 XP).", "focus-session");
       toast('Focus session completed! (+25 XP)');
+      if (state.settings && state.settings.autoBreak) {
+        const breakSecs = (state.settings.shortBreak || 5) * 60;
+        timerInitial = breakSecs;
+        timerSeconds = breakSecs;
+        updateTimer();
+        $('timer-status').textContent = '☕ Restorative break ready. Press Start when ready!';
+      }
     }
   }, 1000);
 };
@@ -3959,15 +4607,16 @@ $('coach-ask').onclick = () => {
   ansBox.classList.remove('hidden');
 };
 
-// ================= PAGE 11: SETTINGS, BACKUP & EXPORTS =================
+// ================= PAGE 11: SETTINGS, NOTIFICATIONS & EXPORTS =================
 function applyTheme() {
   document.body.classList.toggle('dark', state.theme === 'dark');
   document.documentElement.style.setProperty('--accent', state.accent || '#10b981');
   document.documentElement.style.setProperty('--accent2', state.accent || '#059669');
   if ($('theme-toggle')) $('theme-toggle').textContent = state.theme === 'dark' ? '☀ Light' : '☾ Theme';
-  if ($('mobile-theme-toggle')) $('mobile-theme-toggle').textContent = state.theme === 'dark' ? '☀' : '☾';
-  if ($('sound-toggle')) $('sound-toggle').textContent = state.soundFx ? '🔊 Sound: On' : '🔇 Sound: Off';
   if ($('mobile-sound-toggle')) $('mobile-sound-toggle').textContent = state.soundFx ? '🔊' : '🔇';
+  if ($('sound-toggle')) $('sound-toggle').textContent = state.soundFx ? '🔊 Sound: On' : '🔇 Sound: Off';
+  if ($('settings-sound-toggle')) $('settings-sound-toggle').textContent = state.soundFx ? '🔊 Sound: On' : '🔇 Sound: Off';
+  if ($('drawer-theme-icon')) $('drawer-theme-icon').textContent = state.theme === 'dark' ? '☀️' : '🌙';
 }
 
 $('theme-toggle').onclick = () => {
@@ -3979,18 +4628,36 @@ $('theme-light').onclick = () => {
   state.theme = 'light';
   applyTheme();
   save();
+  toast('Light mode activated');
 };
 $('theme-dark').onclick = () => {
   state.theme = 'dark';
   applyTheme();
   save();
+  toast('Dark mode activated');
 };
+$('theme-auto').onclick = () => {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  state.theme = prefersDark ? 'dark' : 'light';
+  applyTheme();
+  save();
+  toast('Theme matched to system appearance');
+};
+
 $('sound-toggle').onclick = () => {
   state.soundFx = !state.soundFx;
   applyTheme();
   save();
   toast(state.soundFx ? 'Sound effects enabled' : 'Sound effects muted');
 };
+if ($('settings-sound-toggle')) {
+  $('settings-sound-toggle').onclick = () => {
+    state.soundFx = !state.soundFx;
+    applyTheme();
+    save();
+    toast(state.soundFx ? 'Sound effects enabled' : 'Sound effects muted');
+  };
+}
 $('test-chime-btn').onclick = () => {
   playChime(659.25, 'triangle');
   toast('Test chime played!');
@@ -4006,30 +4673,494 @@ document.querySelectorAll('.theme-swatch').forEach(b => {
   };
 });
 
-$('enable-notifications').onclick = async () => {
-  if (!('Notification' in window)) {
-    return toast('Browser notifications are not supported in this environment.');
-  }
-  const p = await Notification.requestPermission();
-  state.settings.notifications = (p === 'granted');
-  $('notification-status').textContent = `Notification permission: ${p}`;
-  save();
-  toast(p === 'granted' ? 'Notifications enabled' : 'Notification permission was not granted.');
+// Navigation shortcuts to Settings
+if ($('mobile-settings-top-btn')) {
+  $('mobile-settings-top-btn').onclick = () => showPage('settings');
+}
+if ($('desktop-settings-btn')) {
+  $('desktop-settings-btn').onclick = () => showPage('settings');
+}
+
+// In-App Notification Banner functions
+function showInAppBanner(title, body) {
+  const banner = $('in-app-notif-banner');
+  if (!banner) return;
+  $('in-app-notif-title').textContent = title;
+  $('in-app-notif-body').textContent = body;
+  banner.classList.remove('-translate-y-28', 'opacity-0', 'pointer-events-none');
+  banner.classList.add('translate-y-0', 'opacity-100');
+  
+  clearTimeout(banner._timer);
+  banner._timer = setTimeout(() => hideInAppBanner(), 6500);
+}
+
+function hideInAppBanner() {
+  const banner = $('in-app-notif-banner');
+  if (!banner) return;
+  banner.classList.add('-translate-y-28', 'opacity-0', 'pointer-events-none');
+  banner.classList.remove('translate-y-0', 'opacity-100');
+}
+
+if ($('in-app-notif-dismiss')) $('in-app-notif-dismiss').onclick = hideInAppBanner;
+if ($('in-app-notif-action')) $('in-app-notif-action').onclick = () => {
+  hideInAppBanner();
+  showPage('habits');
 };
 
-function checkReminders() {
-  if (!state.settings.notifications || !('Notification' in window) || Notification.permission !== 'granted') return;
-  const now = new Date();
-  const time = now.toTimeString().slice(0, 5);
-  state.habits.filter(h => h.reminder === time && !done(h)).forEach(h => {
+// Dispatch real native notification + vibration + audio + in-app banner
+async function sendNotification(title, body, tag = 'habitflow-alert') {
+  // 1. Play sound chime if enabled
+  if (state.soundFx && (state.settings?.sound !== false)) {
     try {
-      new Notification("Ganesh's HabitFlow Reminder", {
-        body: `Time for your habit: ${h.name} (${h.category})`
-      });
+      playChime(587.33, 'triangle');
+      setTimeout(() => playChime(880, 'sine'), 120);
     } catch (e) {}
-  });
+  }
+
+  // 2. Mobile vibration pulse
+  if (navigator.vibrate && (state.settings?.vibration !== false)) {
+    try {
+      navigator.vibrate([200, 100, 200, 100, 200]);
+    } catch (e) {}
+  }
+
+  // 3. Native system push notification
+  let sentNative = false;
+  if ('Notification' in window && Notification.permission === 'granted') {
+    const iconData = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="%2310b981"/><text x="50" y="65" font-size="45" font-weight="bold" text-anchor="middle" fill="white">✓</text></svg>';
+    const options = {
+      body: body,
+      icon: iconData,
+      badge: iconData,
+      tag: tag,
+      renotify: true,
+      vibrate: [200, 100, 200, 100, 200]
+    };
+
+    // Try service worker registration if available
+    try {
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        const reg = await navigator.serviceWorker.ready;
+        await reg.showNotification(title, options);
+        sentNative = true;
+      }
+    } catch (err) {
+      console.warn('SW notification fallback:', err);
+    }
+
+    if (!sentNative) {
+      try {
+        new Notification(title, options);
+        sentNative = true;
+      } catch (err) {
+        console.warn('Direct notification error:', err);
+      }
+    }
+  }
+
+  // 4. Always display floating in-app banner for guaranteed visibility
+  showInAppBanner(title, body);
+  return sentNative;
 }
-setInterval(checkReminders, 30000);
+
+// Update Notification UI badges and descriptions
+function updateNotificationStatusUI() {
+  const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
+  const pill = $('notif-permission-pill');
+  const badge = $('badge-notif-status');
+  const desc = $('notif-status-desc');
+
+  if (perm === 'granted') {
+    if (pill) {
+      pill.textContent = 'Permission: Granted ✓';
+      pill.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10';
+    }
+    if (badge) {
+      badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Notifications: Active';
+      badge.className = 'px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
+    }
+    if (desc) desc.textContent = 'Active! Your phone and browser will alert you for routines and habits.';
+  } else if (perm === 'denied') {
+    if (pill) {
+      pill.textContent = 'Permission: Denied ✕';
+      pill.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full border border-rose-500/40 text-rose-600 dark:text-rose-400 bg-rose-500/10';
+    }
+    if (badge) {
+      badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span> Notifications: Blocked';
+      badge.className = 'px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400';
+    }
+    if (desc) desc.textContent = 'Blocked by browser permissions. See the instructions below to enable.';
+  } else {
+    if (pill) {
+      pill.textContent = 'Permission: Not Set';
+      pill.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full border border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10';
+    }
+    if (badge) {
+      badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500"></span> Notifications: Inactive';
+      badge.className = 'px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400';
+    }
+    if (desc) desc.textContent = 'Tap "Enable Notifications" so your phone reminds you on schedule.';
+  }
+}
+
+// Request Notification Permission
+$('enable-notifications').onclick = async () => {
+  if (!('Notification' in window)) {
+    showInAppBanner('Notification Engine', 'Browser notifications are not supported in this iframe, but in-app banners are active!');
+    return toast('Browser notifications not supported in this view; in-app alerts active.');
+  }
+  try {
+    const p = await Notification.requestPermission();
+    if (!state.settings) state.settings = {};
+    state.settings.notifications = (p === 'granted');
+    save();
+    updateNotificationStatusUI();
+    if (p === 'granted') {
+      toast('Notifications enabled! Tap "Test On My Phone" to verify.');
+      sendNotification("Ganesh's HabitFlow Activated ✦", "Notifications are active! You will receive daily routine and habit reminders.");
+    } else {
+      toast('Notification permission was not granted.');
+    }
+  } catch (e) {
+    toast('Error requesting permissions: ' + e.message);
+  }
+};
+
+// Immediate Mobile Test Notification Button
+$('test-mobile-notif-btn').onclick = async () => {
+  if (!('Notification' in window)) {
+    sendNotification("Ganesh's HabitFlow Alert ⚡", "Test alert received! Vibration and sound simulated.");
+    return toast('Test alert triggered (in-app view).');
+  }
+  
+  if (Notification.permission !== 'granted') {
+    try {
+      const p = await Notification.requestPermission();
+      if (!state.settings) state.settings = {};
+      state.settings.notifications = (p === 'granted');
+      save();
+      updateNotificationStatusUI();
+    } catch (e) {}
+  }
+
+  const name = state.profile?.name || 'Ganesh';
+  await sendNotification(
+    `🔔 HabitFlow Alert for ${name}!`,
+    `Mobile notifications are working smoothly. Your routines will alert you on time!`,
+    'test-alert'
+  );
+  toast('Test alert sent! Check your phone notification bar.');
+};
+
+// Check scheduled routines and habit reminders every 15 seconds
+function checkReminders() {
+  const now = new Date();
+  const currentHours = String(now.getHours()).padStart(2, '0');
+  const currentMinutes = String(now.getMinutes()).padStart(2, '0');
+  const currentTime = `${currentHours}:${currentMinutes}`;
+  const todayStr = today();
+
+  if (!state.settings) state.settings = {};
+  if (!state.settings.lastNotified) state.settings.lastNotified = {};
+  
+  const userName = state.profile?.name || 'Ganesh';
+
+  // 1. Morning Routine check
+  if (state.settings.morningReminder?.enabled !== false) {
+    const morningTime = state.settings.morningReminder?.time || '08:00';
+    const key = `morning_${todayStr}`;
+    if (currentTime === morningTime && !state.settings.lastNotified[key]) {
+      state.settings.lastNotified[key] = true;
+      save();
+      sendNotification(
+        `🌅 Good Morning, ${userName}!`,
+        `Start your day strong. Review your morning habits in HabitFlow.`,
+        'routine-morning'
+      );
+    }
+  }
+
+  // 2. Afternoon Routine check
+  if (state.settings.afternoonReminder?.enabled !== false) {
+    const afternoonTime = state.settings.afternoonReminder?.time || '13:30';
+    const key = `afternoon_${todayStr}`;
+    if (currentTime === afternoonTime && !state.settings.lastNotified[key]) {
+      state.settings.lastNotified[key] = true;
+      save();
+      const pendingCount = state.habits.filter(h => !done(h)).length;
+      sendNotification(
+        `☀️ Mid-Day Momentum Check`,
+        pendingCount > 0 ? `You have ${pendingCount} habits remaining today. Keep building your streak!` : `Outstanding work! You've completed all your habits for today! 🎉`,
+        'routine-afternoon'
+      );
+    }
+  }
+
+  // 3. Evening Routine check
+  if (state.settings.eveningReminder?.enabled !== false) {
+    const eveningTime = state.settings.eveningReminder?.time || '21:00';
+    const key = `evening_${todayStr}`;
+    if (currentTime === eveningTime && !state.settings.lastNotified[key]) {
+      state.settings.lastNotified[key] = true;
+      save();
+      const pendingCount = state.habits.filter(h => !done(h)).length;
+      sendNotification(
+        `🌙 Evening Reflection & Streak Saver`,
+        pendingCount > 0 ? `Don't break your streak! ${pendingCount} habits are waiting for your check-in tonight.` : `All habits logged for today! Rest well and celebrate your consistency.`,
+        'routine-evening'
+      );
+    }
+  }
+
+  // 4. Habit-Specific Reminders
+  if (state.settings.habitReminders !== false) {
+    state.habits.forEach(h => {
+      if (h.reminder && h.reminder === currentTime && !done(h)) {
+        const key = `habit_${h.id}_${todayStr}`;
+        if (!state.settings.lastNotified[key]) {
+          state.settings.lastNotified[key] = true;
+          save();
+          sendNotification(
+            `🔔 Habit Reminder: ${h.name}`,
+            `Time for your ${h.category} routine: ${h.name}.${h.fallback ? ' Fallback: ' + h.fallback : ''}`,
+            `habit-${h.id}`
+          );
+        }
+      }
+    });
+  }
+}
+setInterval(checkReminders, 15000);
+
+// Initialize Settings Inputs & Event Listeners
+function initSettingsUI() {
+  if (!state.profile) {
+    state.profile = {
+      name: 'Ganesh',
+      motto: 'Small continuous actions compound into extraordinary futures.',
+      dailyTargetPercent: 80,
+      timeFormat: '12h',
+      weekStart: 'monday'
+    };
+  }
+  if (!state.settings) {
+    state.settings = {
+      notifications: false,
+      vibration: true,
+      sound: true,
+      morningReminder: { enabled: true, time: '08:00' },
+      afternoonReminder: { enabled: true, time: '13:30' },
+      eveningReminder: { enabled: true, time: '21:00' },
+      habitReminders: true,
+      focusDuration: 25,
+      shortBreak: 5,
+      longBreak: 15,
+      autoBreak: false,
+      lastNotified: {}
+    };
+  }
+
+  // Populate Profile Inputs
+  if ($('setting-user-name')) $('setting-user-name').value = state.profile.name || 'Ganesh';
+  if ($('setting-user-motto')) $('setting-user-motto').value = state.profile.motto || 'Small continuous actions compound into extraordinary futures.';
+  if ($('setting-target-slider')) {
+    $('setting-target-slider').value = state.profile.dailyTargetPercent || 80;
+    if ($('setting-target-label')) $('setting-target-label').textContent = (state.profile.dailyTargetPercent || 80) + '%';
+  }
+  if ($('setting-time-format')) $('setting-time-format').value = state.profile.timeFormat || '12h';
+  if ($('setting-week-start')) $('setting-week-start').value = state.profile.weekStart || 'monday';
+
+  // Target slider live change
+  if ($('setting-target-slider')) {
+    $('setting-target-slider').oninput = (e) => {
+      if ($('setting-target-label')) $('setting-target-label').textContent = e.target.value + '%';
+    };
+  }
+
+  // Save Profile Button
+  if ($('save-profile-btn')) {
+    $('save-profile-btn').onclick = () => {
+      state.profile.name = $('setting-user-name').value.trim() || 'Ganesh';
+      state.profile.motto = $('setting-user-motto').value.trim() || 'Small continuous actions compound into extraordinary futures.';
+      state.profile.dailyTargetPercent = parseInt($('setting-target-slider').value, 10) || 80;
+      state.profile.timeFormat = $('setting-time-format').value;
+      state.profile.weekStart = $('setting-week-start').value;
+      save();
+      updateDynamicGreeting();
+      toast('Profile & settings saved successfully!');
+    };
+  }
+
+  // Notification Toggles
+  if ($('setting-vibration-toggle')) {
+    $('setting-vibration-toggle').checked = (state.settings.vibration !== false);
+    $('setting-vibration-toggle').onchange = (e) => {
+      state.settings.vibration = e.target.checked;
+      save();
+    };
+  }
+  if ($('setting-notif-sound-toggle')) {
+    $('setting-notif-sound-toggle').checked = (state.settings.sound !== false);
+    $('setting-notif-sound-toggle').onchange = (e) => {
+      state.settings.sound = e.target.checked;
+      save();
+    };
+  }
+
+  // Scheduled Reminder Times
+  if ($('setting-morning-time')) {
+    $('setting-morning-time').value = state.settings.morningReminder?.time || '08:00';
+    $('setting-morning-time').onchange = (e) => {
+      if (!state.settings.morningReminder) state.settings.morningReminder = {};
+      state.settings.morningReminder.time = e.target.value;
+      save();
+    };
+  }
+  if ($('setting-morning-enabled')) {
+    $('setting-morning-enabled').checked = (state.settings.morningReminder?.enabled !== false);
+    $('setting-morning-enabled').onchange = (e) => {
+      if (!state.settings.morningReminder) state.settings.morningReminder = {};
+      state.settings.morningReminder.enabled = e.target.checked;
+      save();
+    };
+  }
+
+  if ($('setting-afternoon-time')) {
+    $('setting-afternoon-time').value = state.settings.afternoonReminder?.time || '13:30';
+    $('setting-afternoon-time').onchange = (e) => {
+      if (!state.settings.afternoonReminder) state.settings.afternoonReminder = {};
+      state.settings.afternoonReminder.time = e.target.value;
+      save();
+    };
+  }
+  if ($('setting-afternoon-enabled')) {
+    $('setting-afternoon-enabled').checked = (state.settings.afternoonReminder?.enabled !== false);
+    $('setting-afternoon-enabled').onchange = (e) => {
+      if (!state.settings.afternoonReminder) state.settings.afternoonReminder = {};
+      state.settings.afternoonReminder.enabled = e.target.checked;
+      save();
+    };
+  }
+
+  if ($('setting-evening-time')) {
+    $('setting-evening-time').value = state.settings.eveningReminder?.time || '21:00';
+    $('setting-evening-time').onchange = (e) => {
+      if (!state.settings.eveningReminder) state.settings.eveningReminder = {};
+      state.settings.eveningReminder.time = e.target.value;
+      save();
+    };
+  }
+  if ($('setting-evening-enabled')) {
+    $('setting-evening-enabled').checked = (state.settings.eveningReminder?.enabled !== false);
+    $('setting-evening-enabled').onchange = (e) => {
+      if (!state.settings.eveningReminder) state.settings.eveningReminder = {};
+      state.settings.eveningReminder.enabled = e.target.checked;
+      save();
+    };
+  }
+
+  if ($('setting-habit-reminders-toggle')) {
+    $('setting-habit-reminders-toggle').checked = (state.settings.habitReminders !== false);
+    $('setting-habit-reminders-toggle').onchange = (e) => {
+      state.settings.habitReminders = e.target.checked;
+      save();
+    };
+  }
+
+  // Focus Timer Settings
+  if ($('setting-focus-duration')) {
+    $('setting-focus-duration').value = state.settings.focusDuration || '25';
+    $('setting-focus-duration').onchange = (e) => {
+      state.settings.focusDuration = parseInt(e.target.value, 10);
+      save();
+    };
+  }
+  if ($('setting-short-break')) {
+    $('setting-short-break').value = state.settings.shortBreak || '5';
+    $('setting-short-break').onchange = (e) => {
+      state.settings.shortBreak = parseInt(e.target.value, 10);
+      save();
+    };
+  }
+  if ($('setting-long-break')) {
+    $('setting-long-break').value = state.settings.longBreak || '15';
+    $('setting-long-break').onchange = (e) => {
+      state.settings.longBreak = parseInt(e.target.value, 10);
+      save();
+    };
+  }
+  if ($('setting-auto-break')) {
+    $('setting-auto-break').checked = (state.settings.autoBreak === true);
+    $('setting-auto-break').onchange = (e) => {
+      state.settings.autoBreak = e.target.checked;
+      save();
+    };
+  }
+
+  // Sync Room Display & Actions
+  if ($('setting-room-code-display') && typeof syncConfig !== 'undefined') {
+    $('setting-room-code-display').textContent = syncConfig.roomCode;
+  }
+  if ($('setting-open-sync-modal-btn')) {
+    $('setting-open-sync-modal-btn').onclick = openSyncModal;
+  }
+  if ($('setting-force-push')) {
+    $('setting-force-push').onclick = () => {
+      syncCloud(true);
+      toast('Pushed local habits to sync vault!');
+    };
+  }
+  if ($('setting-force-pull')) {
+    $('setting-force-pull').onclick = () => {
+      syncCloud(false);
+      toast('Synchronized latest state from cloud!');
+    };
+  }
+
+  // Clear Today's Checkmarks
+  if ($('clear-today-btn')) {
+    $('clear-today-btn').onclick = () => {
+      showModal({
+        title: "Clear Today's Checkmarks?",
+        bodyHTML: '<p class="muted">Are you sure you want to uncheck all completed habits for today? Your past history and streaks will remain safe.</p>',
+        confirmText: "Clear Today",
+        cancelText: "Keep Checkmarks",
+        onConfirm: () => {
+          delete state.logs[today()];
+          save();
+          renderAll();
+          toast("Today's habit checkmarks have been cleared.");
+        }
+      });
+    };
+  }
+
+  // Storage Used Metric
+  if ($('badge-storage-status')) {
+    const rawLen = (localStorage.getItem(KEY) || '').length;
+    const kb = (rawLen / 1024).toFixed(1);
+    $('badge-storage-status').textContent = `💾 Vault: ${kb} KB`;
+  }
+
+  updateNotificationStatusUI();
+}
+
+function updateDynamicGreeting() {
+  const name = state.profile?.name || 'Ganesh';
+  const hour = new Date().getHours();
+  let timeStr = 'Good day';
+  if (hour < 12) timeStr = 'Good morning';
+  else if (hour < 17) timeStr = 'Good afternoon';
+  else timeStr = 'Good evening';
+  
+  if ($('page-title') && (!document.querySelector('.page.active') || document.querySelector('.page.active').id === 'page-dashboard')) {
+    $('page-title').textContent = `${timeStr}, ${name}. Make it count.`;
+  }
+  if ($('mobile-subtitle')) {
+    $('mobile-subtitle').textContent = `${name}'s Futures Engine`;
+  }
+}
+
 
 // File Download Helper
 function downloadBlob(filename, blob) {
@@ -4068,7 +5199,7 @@ $('import-json').onchange = async e => {
       confirmText: 'Restore Backup',
       onConfirm: () => {
         state = {
-          ...structuredClone(defaultState),
+          ...safeClone(defaultState),
           ...parsed,
           settings: { ...defaultState.settings, ...(parsed.settings || {}) }
         };
@@ -4169,7 +5300,7 @@ $('reset-data').onclick = () => {
     bodyHTML: '<p class="muted">Permanently erase all habits, streaks, and journal reflections? Make sure to download a JSON backup first if you want to keep your progress.</p>',
     confirmText: 'Erase Everything',
     onConfirm: () => {
-      state = structuredClone(defaultState);
+      state = safeClone(defaultState);
       save();
       applyTheme();
       renderAll();
@@ -4193,7 +5324,22 @@ const pageTitles = {
   settings: 'Personalize HabitFlow & Manage Data'
 };
 
-function showPage(name) {
+let pageHistory = ['dashboard'];
+
+function showPage(name, pushToHistory = true) {
+  if (!name) name = 'dashboard';
+  
+  // Track page history for back button
+  const currentActive = document.querySelector('.page.active')?.id.replace('page-', '') || 'dashboard';
+  if (pushToHistory && currentActive !== name) {
+    if (pageHistory[pageHistory.length - 1] !== name) {
+      pageHistory.push(name);
+    }
+    try {
+      history.pushState({ page: name }, '', '#' + name);
+    } catch (e) {}
+  }
+
   document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === `page-${name}`));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.page === name));
   document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === name));
@@ -4202,13 +5348,128 @@ function showPage(name) {
   closeDrawer();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
+  // Update Mobile Header Back Button & Title
+  const mobileBackBtn = $('mobile-back-btn');
+  const mobileBrandIcon = $('mobile-brand-icon');
+  const mobileTitleText = $('mobile-title-text');
+
+  if (mobileBackBtn) {
+    if (name === 'dashboard' || pageHistory.length <= 1) {
+      mobileBackBtn.classList.add('hidden');
+      if (mobileBrandIcon) mobileBrandIcon.classList.remove('hidden');
+      if (mobileTitleText) mobileTitleText.textContent = 'HabitFlow';
+    } else {
+      mobileBackBtn.classList.remove('hidden');
+      if (mobileBrandIcon) mobileBrandIcon.classList.add('hidden');
+      const shortTitles = {
+        habits: 'Habits Studio',
+        futures: 'Futures',
+        calendar: 'Year Heatmap',
+        analytics: 'Analytics',
+        quests: 'Quests',
+        goals: 'Goals',
+        journal: 'Reflections',
+        focus: 'Focus Timer',
+        coach: 'AI Coach',
+        settings: 'Settings'
+      };
+      if (mobileTitleText) mobileTitleText.textContent = shortTitles[name] || 'HabitFlow';
+    }
+  }
+
+  // Update Desktop Header Back Button
+  const desktopBackBtn = $('desktop-back-btn');
+  if (desktopBackBtn) {
+    if (name === 'dashboard' || pageHistory.length <= 1) {
+      desktopBackBtn.classList.add('hidden');
+      desktopBackBtn.classList.remove('flex');
+    } else {
+      desktopBackBtn.classList.remove('hidden');
+      desktopBackBtn.classList.add('flex');
+      const prevName = pageHistory.length > 1 ? pageHistory[pageHistory.length - 2] : 'dashboard';
+      const label = $('desktop-back-label');
+      if (label) {
+        label.textContent = prevName === 'dashboard' ? 'Back to Today' : `Back to ${prevName.charAt(0).toUpperCase() + prevName.slice(1)}`;
+      }
+    }
+  }
+
   if (name === 'analytics') renderAnalytics();
   if (name === 'futures') renderFutures();
   if (name === 'quests') renderQuests();
   if (name === 'calendar') renderCalendar();
+  if (name === 'settings') initSettingsUI();
+  if (name === 'dashboard') updateDynamicGreeting();
+}
+
+function goBack() {
+  // 1. If mobile drawer is open, close it
+  const drawer = $('mobile-drawer');
+  if (drawer && drawer.classList.contains('open')) {
+    closeDrawer();
+    return;
+  }
+  
+  // 2. If any modal overlay is open, close it
+  if (closeAnyOpenModal()) return;
+
+  // 3. Otherwise navigate to the previous page in history
+  if (pageHistory.length > 1) {
+    pageHistory.pop(); // Remove current page
+    const prev = pageHistory[pageHistory.length - 1] || 'dashboard';
+    showPage(prev, false);
+    try {
+      history.replaceState({ page: prev }, '', '#' + prev);
+    } catch (e) {}
+  } else {
+    showPage('dashboard', false);
+    try {
+      history.replaceState({ page: 'dashboard' }, '', '#dashboard');
+    } catch (e) {}
+  }
+}
+
+function closeAnyOpenModal() {
+  let closed = false;
+  ['sync-modal', 'shortcuts-modal', 'install-modal', 'modal-container'].forEach(id => {
+    const el = $(id);
+    if (el && !el.classList.contains('hidden')) {
+      el.classList.add('hidden');
+      closed = true;
+    }
+  });
+  return closed;
 }
 
 document.querySelectorAll('.nav-item').forEach(b => b.onclick = () => showPage(b.dataset.page));
+
+// Wire Back Button clicks
+if ($('mobile-back-btn')) $('mobile-back-btn').onclick = goBack;
+if ($('desktop-back-btn')) $('desktop-back-btn').onclick = goBack;
+document.querySelectorAll('.page-back-action').forEach(b => b.onclick = goBack);
+
+// Browser Back button / Mobile swipe back gesture support
+window.addEventListener('popstate', (e) => {
+  if (closeAnyOpenModal()) return;
+  const target = e.state?.page || location.hash.replace('#', '') || 'dashboard';
+  showPage(target, false);
+});
+
+// Escape key closes modals or triggers goBack
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (closeAnyOpenModal()) return;
+    const drawer = $('mobile-drawer');
+    if (drawer && drawer.classList.contains('open')) {
+      closeDrawer();
+      return;
+    }
+    const currentActive = document.querySelector('.page.active')?.id.replace('page-', '') || 'dashboard';
+    if (currentActive !== 'dashboard') {
+      goBack();
+    }
+  }
+});
 document.querySelectorAll('[data-goto]').forEach(b => b.onclick = () => showPage(b.dataset.goto));
 
 // Mobile Navigation & Drawer Handlers
@@ -4241,6 +5502,14 @@ function closeShortcuts() {
 
 if ($('mobile-more-btn')) $('mobile-more-btn').onclick = openDrawer;
 if ($('mobile-drawer-close')) $('mobile-drawer-close').onclick = closeDrawer;
+if ($('drawer-theme-toggle')) {
+  $('drawer-theme-toggle').onclick = () => {
+    state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    applyTheme();
+    save();
+    toast(state.theme === 'dark' ? 'Dark theme enabled' : 'Light theme enabled');
+  };
+}
 if ($('mobile-drawer-overlay')) $('mobile-drawer-overlay').onclick = closeDrawer;
 
 document.querySelectorAll('.mobile-nav-btn[data-page]').forEach(b => {
@@ -4354,6 +5623,9 @@ if ($('mobile-theme-toggle')) {
     save();
   };
 }
+if ($('dash-quick-add-btn')) {
+  $('dash-quick-add-btn').onclick = openAddHabitModal;
+}
 if ($('mobile-quick-add')) {
   $('mobile-quick-add').onclick = openAddHabitModal;
 }
@@ -4427,6 +5699,8 @@ window.addEventListener('keydown', (e) => {
 });
 
 function renderAll() {
+  initSettingsUI();
+  updateDynamicGreeting();
   renderDashboard();
   renderHabits();
   renderCalendar();
@@ -4822,16 +6096,6 @@ renderAll();
 updateTimer();
 
 })();
-</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(error => {
-      console.error('HabitFlow service worker registration failed:', error);
-    });
-  });
-}
 </script>
 </body>
 </html>
